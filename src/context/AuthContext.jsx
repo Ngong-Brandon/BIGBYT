@@ -9,7 +9,7 @@ import {
   getProfile,
   resendOtp,
   onAuthStateChange,
-} from "../services/authService";
+} from "../services/AuthService";
 
 const AuthContext = createContext(null);
 
