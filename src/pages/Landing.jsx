@@ -8,15 +8,20 @@ export default function Landing({ go }) {
   const [featured, setFeatured] = useState([]);
   const [loading, setLoading]   = useState(true);
 
+
   useEffect(() => {
+    
     async function load() {
+      setLoading(false);
       const { featured } = await getFeaturedRestaurants();
       setFeatured(featured);
-      setLoading(false);
+     
+      
     }
+
     load();
   }, []);
-
+  
   return (
     <div style={{ maxWidth: 1000, margin: "0 auto", padding: "0 20px" }}>
 
@@ -71,18 +76,22 @@ export default function Landing({ go }) {
       <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.5px", marginBottom: 20, color: C.text }}>
         🏙️ Featured Restaurants
       </h2>
-
+           
       {loading ? (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: 16, marginBottom: 64 }}>
           {[1, 2, 3, 4].map(i => (
             <div key={i} style={{ background: C.surface, borderRadius: 20, height: 180, animation: "pulse 1.5s infinite" }} />
           ))}
+          
         </div>
       ) : featured.length > 0 ? (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: 16, marginBottom: 64 }}>
           {featured.map(r => (
+            
             <RestaurantCard key={r.id} r={r} onEnter={() => go("register")} />
           ))}
+
+          
         </div>
       ) : (
         // Fallback if no featured restaurants set yet

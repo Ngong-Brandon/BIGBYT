@@ -21,19 +21,38 @@ export function AuthProvider({ children }) {
 
   // ── Listen to Supabase auth state changes ─────────────────────────────────
   useEffect(() => {
+   
+    const timeout = setTimeout(() => {
+      setLoading(false);
+      
+    }, 2000);
     const subscription = onAuthStateChange(async (event, session) => {
+      
+      
+
       if (session?.user) {
         setUser(session.user);
         const { profile } = await getProfile(session.user.id);
         setProfile(profile);
+       
+        
       } else {
         setUser(null);
         setProfile(null);
+     
+        
       }
+      
       setLoading(false);
-    });
+      clearTimeout(timeout);
 
-    return () => subscription.unsubscribe();
+      
+    });
+    
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeout);
+    };
   }, []);
 
   // ── Register ───────────────────────────────────────────────────────────────
@@ -96,7 +115,9 @@ export function AuthProvider({ children }) {
         isLoggedIn: !!user,
       }}
     >
-      {!loading && children}
+
+      
+      {children}
     </AuthContext.Provider>
   );
 }

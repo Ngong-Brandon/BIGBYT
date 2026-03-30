@@ -2,6 +2,9 @@
 import { C } from "../constants/Colors";
 
 export default function RestaurantCard({ r, onEnter }) {
+  console.log(r);
+  
+  console.log(r.open);
   return (
     <div
       className="card"

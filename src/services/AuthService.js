@@ -47,19 +47,19 @@ export async function registerUser({ fullName, email, password, dateOfBirth, pho
  
   // Write profile row immediately (user row exists, but session is not yet confirmed) 
   // This will succeed because we use the user's own id 
-  if (data.user) { 
-    const { error: profileError } = await supabase.from("profiles").insert({ 
-      id:            data.user.id, 
-      full_name:     fullName, 
-      phone:         phone || null, 
-      date_of_birth: dateOfBirth, 
-    }); 
+  // if (data.user) { 
+  //   const { error: profileError } = await supabase.from("profiles").insert({ 
+  //     id:            data.user.id, 
+  //     full_name:     fullName, 
+  //     phone:         phone || null, 
+  //     date_of_birth: dateOfBirth, 
+  //   }); 
  
-    if (profileError) { 
-      console.error("Profile insert error:", profileError); 
-      // Non-fatal — profile can be created on first login 
-    } 
-  } 
+  //   if (profileError) { 
+  //     console.error("Profile insert error:", profileError); 
+  //     // Non-fatal — profile can be created on first login 
+  //   } 
+  // } 
  
   return { data, error }; 
 } 

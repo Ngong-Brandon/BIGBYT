@@ -85,16 +85,23 @@ export async function getMenu(restaurantId) {
  
  
 // ── GET FEATURED RESTAURANTS 
-
 export async function getFeaturedRestaurants() { 
+  
+  
   const { data, error } = await supabase 
     .from("restaurants") 
-    .select("id, name, cuisine_tags, emoji, rating, delivery_time, delivery_fee, neighborhood, is_open") 
-    .eq("is_featured", true) 
-    .limit(4); 
+    .select("*") 
+    .eq("is_featured", true)
+    .limit(4);
+   
+    
+
+
+    
   return { featured: data || [], error }; 
 } 
- 
+
+
  
 // ── SEARCH RESTAURANTS 
 
