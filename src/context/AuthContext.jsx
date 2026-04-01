@@ -11,6 +11,8 @@ import {
   onAuthStateChange,
 } from "../services/AuthService";
 
+// await getProfile('');
+
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -26,13 +28,18 @@ export function AuthProvider({ children }) {
       setLoading(false);
       
     }, 2000);
+  
     const subscription = onAuthStateChange(async (event, session) => {
       
       
 
       if (session?.user) {
-        setUser(session.user);
-        const { profile } = await getProfile(session.user.id);
+        
+    
+        setUser(session?.user.id);
+        // const { profile } = await getProfile(session?.user.id);
+        // profile = {}
+       
         setProfile(profile);
        
         
@@ -115,9 +122,7 @@ export function AuthProvider({ children }) {
         isLoggedIn: !!user,
       }}
     >
-
-      
-      {children}
+     {children}
     </AuthContext.Provider>
   );
 }

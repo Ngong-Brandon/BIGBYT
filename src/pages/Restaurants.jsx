@@ -8,6 +8,8 @@ import { useAuth } from "../context/AuthContext";
 
 export default function Restaurants({ go, setActiveRestaurant }) {
   const { user, profile } = useAuth();
+  
+  
 
   const [allRestaurants, setAllRestaurants] = useState([]);
   const [loading, setLoading]               = useState(true);
@@ -21,14 +23,25 @@ export default function Restaurants({ go, setActiveRestaurant }) {
   const userNeighborhood = profile?.neighborhood || import.meta.env.VITE_DEFAULT_NEIGHBORHOOD || "Lekki Phase 1";
 const userCity         = profile?.city         || import.meta.env.VITE_DEFAULT_CITY         || "Lagos";
 
+
+
+
+
+
+
+
   // ── Load all restaurants on mount ─────────────────────────────────────────
   useEffect(() => {
+  
     async function load() {
       setLoading(true);
+      
       const { restaurants, error } = await getRestaurants({ city: userCity });
+      
+      
       if (error) {
         setError("Could not load restaurants. Please try again.");
-        console.error(error);
+        // console.error(error);
       } else {
         // Sort: nearby first, then featured, then by rating
         const nearby = restaurants.filter(r => r.neighborhood === userNeighborhood);
@@ -37,6 +50,7 @@ const userCity         = profile?.city         || import.meta.env.VITE_DEFAULT_C
       }
       setLoading(false);
     }
+
     load();
   }, [userCity, userNeighborhood]);
 

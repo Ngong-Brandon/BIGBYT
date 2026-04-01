@@ -2,9 +2,8 @@
 import { C } from "../constants/Colors";
 
 export default function RestaurantCard({ r, onEnter }) {
-  console.log(r.is_open);
+
   
-  console.log(r.tag);
   return (
     <div
       className="card"

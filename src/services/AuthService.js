@@ -83,6 +83,8 @@ export async function verifyOtp({ email, token }) {
 
 export async function loginUser({ email, password }) { 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password }); 
+  
+  
   return { data, error }; 
 } 
  
@@ -111,10 +113,14 @@ export async function getProfile(userId) {
     .select("*") 
     .eq("id", userId) 
     .single(); 
+   
+    
   return { profile: data, error }; 
 } 
+// await getProfile('');
+//  console.log(await getProfile(''));
  
- 
+
 // ── UPDATE PROFILE 
 
 export async function updateProfile(userId, updates) { 

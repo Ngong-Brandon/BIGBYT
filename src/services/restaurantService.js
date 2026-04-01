@@ -25,6 +25,8 @@ export async function getRestaurants({ city } = {}) {
   } 
  
   const { data, error } = await query; 
+
+  
   return { restaurants: data || [], error }; 
 } 
  
