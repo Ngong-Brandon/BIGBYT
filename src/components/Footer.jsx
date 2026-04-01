@@ -3,7 +3,7 @@
 import { C } from "../constants/Colors";
 
 const NAV_ITEMS = [
-  { key: "landing",     label: "Home",        icon: "⌂" },
+  { key: "home", label: "Home", icon: "⌂" },
   { key: "restaurants", label: "Restaurants", icon: "🍽️" },
   { key: "orders",      label: "Orders",      icon: "📦" },
   { key: "settings",    label: "Settings",    icon: "⚙️" },

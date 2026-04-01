@@ -6,6 +6,7 @@ import { Toast } from "./components/Toast";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Settings from "./pages/Settings";
+import Home from "./pages/Home";
 
 import Landing from "./pages/Landing";
 import Register from "./pages/Auth";
@@ -53,22 +54,36 @@ function Inner() {
   }
 
   // Restore screen on session load
-  useEffect(() => {
-    if (loading) return;
-    if (user) {
-      setScreen(prev => {
-        // Only redirect if still on landing/auth screens
-        const authScreens = ["landing", "login", "register", "verify-otp"];
-        return authScreens.includes(prev) ? "restaurants" : prev;
-      });
-    } else {
-      // Redirect to landing if on protected screen
-      setScreen(prev => {
-        const protectedScreens = ["restaurants", "restaurant", "cart", "checkout", "tracking", "orders", "settings"];
-        return protectedScreens.includes(prev) ? "landing" : prev;
-      });
-    }
-  }, [user, loading]);
+  // useEffect(() => {
+  //   if (loading) return;
+  //   if (user) {
+  //     setScreen(prev => {
+  //       // Only redirect if still on landing/auth screens
+  //       const authScreens = ["home", "login", "register", "verify-otp"];
+
+        
+  //       return authScreens.includes(prev) ? "restaurants" : prev;
+  //     });
+  //   } else {
+  //     // Redirect to landing if on protected screen
+  //     setScreen(prev => {
+  //       const protectedScreens = ["restaurants", "restaurant", "cart", "checkout", "tracking", "orders", "settings"];
+  //       return protectedScreens.includes(prev) ? "landing" : prev;
+  //     });
+  //   }
+  // }, [user, loading]);
+
+
+useEffect(() => {
+  if (loading) return;
+  if (user) {
+    const authScreens = ["landing", "login", "register", "verify-otp"];
+    if (authScreens.includes(screen)) setScreen("home"); // ← change to "home"
+  }
+}, [user, loading]);
+
+
+
 
     if (loading) {
     return (
@@ -105,6 +120,13 @@ function Inner() {
         {screen === "verify-otp"  && <VerifyOTP go={go} showToast={showToast} />}
         {screen === "login"       && <Login go={go} showToast={showToast} />}
         {screen === "settings" && <Settings go={go} />}
+        {screen === "home" && (
+      <Home
+         go={go}
+         setActiveRestaurant={setActiveRestaurant}
+         activeOrder={null}
+       />
+            )}
         {screen === "restaurants" && (
           <Restaurants go={go} setActiveRestaurant={setActiveRestaurant} />
         )}

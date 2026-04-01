@@ -110,16 +110,7 @@ const userCity         = profile?.city         || import.meta.env.VITE_DEFAULT_C
   return (
     <div style={{ maxWidth: 1050, margin: "0 auto", padding: "36px 20px" }}>
 
-      {/* Greeting */}
-      <div style={{ marginBottom: 32 }}>
-        <h1 style={{ fontSize: 38, fontWeight: 800, letterSpacing: "-1px", marginBottom: 6, color: C.text }}>
-          Hey {profile?.full_name?.split(" ")[0] || user?.email?.split("@")[0]} 👋
-        </h1>
-        <p style={{ color: C.muted, fontSize: 15 }}>
-          📍 {userNeighborhood} · <span style={{ color: C.accent, fontWeight: 700 }}>{userCity}</span>
-        </p>
-      </div>
-
+      
       {/* Search bar */}
       <div style={{ position: "relative", marginBottom: 36 }}>
         <span style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", fontSize: 16, color: C.muted }}>
