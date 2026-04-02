@@ -29,32 +29,39 @@ export function AuthProvider({ children }) {
       
     }, 2000);
   
-    const subscription = onAuthStateChange(async (event, session) => {
-      
-      
+const subscription = onAuthStateChange(async (event, session) => {
 
-      if (session?.user) {
-        
+  
+  if (session?.user) {
+    setUser(session.user);
     
-        setUser(session?.user.id);
-        // const { profile } = await getProfile(session?.user.id);
-        // profile = {}
-       
-        setProfile(profile);
-       
-        
-      } else {
-        setUser(null);
-        setProfile(null);
+    
+    // Add a timeout so it never hangs forever
+    const profilePromise = getProfile(session.user.id);
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error("Profile fetch timed out")), 5000)
+    );
+    
+    try {
+      const { profile: p } = await Promise.race([profilePromise, timeoutPromise]);
      
-        
-      }
-      
-      setLoading(false);
-      clearTimeout(timeout);
+      setProfile(p || null);
+    } catch (err) {
 
-      
-    });
+      setProfile(null); // don't block the app
+    }
+    
+  } else {
+    setUser(null);
+    setProfile(null);
+  }
+  
+  setLoading(false);
+  clearTimeout(timeout);
+});
+
+
+
     
     return () => {
       subscription.unsubscribe();

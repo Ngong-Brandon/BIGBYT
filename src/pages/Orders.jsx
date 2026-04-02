@@ -303,7 +303,7 @@ export default function Orders({ go }) {
   const activeOrders = orders.filter(o => ["pending","confirmed","preparing","on_the_way"].includes(o.status));
 
   return (
-    <div style={{ fontFamily: "'Syne', sans-serif", color: C.text, maxWidth: 600, margin: "0 auto", padding: "0 16px 100px" }}>
+    <div style={{ fontFamily: " sans-serif", color: C.text, maxWidth: 600, margin: "0 auto", padding: "0 16px 100px" }}>
 
       {/* Header */}
       <div style={{ padding: "28px 0 16px", borderBottom: `1px solid ${C.border}`, marginBottom: 8 }}>
