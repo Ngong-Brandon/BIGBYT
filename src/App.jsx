@@ -8,6 +8,9 @@ import Footer from "./components/Footer";
 import Settings from "./pages/Settings";
 import Home from "./pages/Home";
 import Notifications from "./pages/Notifications";
+import Orders from "./pages/Orders";
+
+
 
 import Landing from "./pages/Landing";
 import Register from "./pages/Auth";
@@ -122,6 +125,7 @@ useEffect(() => {
         {screen === "login"       && <Login go={go} showToast={showToast} />}
         {screen === "settings" && <Settings go={go} />}
         {screen === "notifications" && <Notifications go={go} />}
+        {screen === "orders" && <Orders go={go} />}
         {screen === "home" && (
       <Home
          go={go}
