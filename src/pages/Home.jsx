@@ -122,7 +122,7 @@ export default function Home({ go, setActiveRestaurant, activeOrder, showToast }
           </div>
         </div>
         {/* 🔔 Bell → clears notification count */}
-        <div onClick={() => setNotifCount(0)} style={{ position: "relative", cursor: "pointer" }}>
+        <div onClick={() => { setNotifCount(0); go("notifications"); }} style={{ position: "relative", cursor: "pointer" }}>
           <div style={{ width: 44, height: 44, borderRadius: 12, background: C.surface, border: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>🔔</div>
           {notifCount > 0 && (
             <div style={{ position: "absolute", top: -4, right: -4, width: 18, height: 18, background: C.error, borderRadius: "50%", border: `2px solid ${C.bg}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 800, color: "#fff" }}>{notifCount}</div>

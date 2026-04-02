@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Settings from "./pages/Settings";
 import Home from "./pages/Home";
+import Notifications from "./pages/Notifications";
 
 import Landing from "./pages/Landing";
 import Register from "./pages/Auth";
@@ -120,6 +121,7 @@ useEffect(() => {
         {screen === "verify-otp"  && <VerifyOTP go={go} showToast={showToast} />}
         {screen === "login"       && <Login go={go} showToast={showToast} />}
         {screen === "settings" && <Settings go={go} />}
+        {screen === "notifications" && <Notifications go={go} />}
         {screen === "home" && (
       <Home
          go={go}
