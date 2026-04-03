@@ -9,6 +9,8 @@ import Settings from "./pages/Settings";
 import Home from "./pages/Home";
 import Notifications from "./pages/Notifications";
 import Orders from "./pages/Orders";
+import Admin from "./pages/Admin";
+
 
 
 
@@ -126,6 +128,7 @@ useEffect(() => {
         {screen === "settings" && <Settings go={go} />}
         {screen === "notifications" && <Notifications go={go} />}
         {screen === "orders" && <Orders go={go} />}
+        {screen === "admin" && <Admin go={go} />}
         {screen === "home" && (
       <Home
          go={go}

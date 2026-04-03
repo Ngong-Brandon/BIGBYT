@@ -438,6 +438,7 @@ export default function Settings({ go }) {
         <Row icon="📄" label="Terms of Service"  sub="Legal agreements"            onClick={() => setSubScreen("terms")} />
         <Row icon="🔏" label="Privacy Policy"    sub="How we use your data"        onClick={() => setSubScreen("privacy")} />
         <Row icon="⭐" label="Rate Bigbyt"       sub="Leave a review on the app store" onClick={() => showToast("Thanks for the love! 🔥", "success")} last />
+      <Row icon="🔐" label="Admin Panel" sub="Platform management" onClick={() => go("admin")} />
       </Section>
 
       <Section title="Danger Zone">
