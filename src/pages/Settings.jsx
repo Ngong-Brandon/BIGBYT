@@ -1,7 +1,7 @@
 // src/pages/Settings.jsx
 // Real Supabase calls + old password verification
 import { useState, useEffect } from "react";
-import { C } from "../constants/colors";
+import { C } from "../constants/Colors";
 import { useAuth } from "../context/AuthContext";
 import { updateProfile } from "../services/AuthService";
 import { supabase } from "../lib/supabase";

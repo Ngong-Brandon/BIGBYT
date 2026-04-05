@@ -1,5 +1,5 @@
 // src/components/Navbar.jsx
-import { C } from "../constants/colors";
+import { C } from "../constants/Colors";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { useNotifications } from "../hooks/useNotifications";

@@ -1,7 +1,7 @@
 // src/pages/Orders.jsx
 // ─── Order history + order detail screen ─────────────────────────────────────
 import { useState, useEffect } from "react";
-import { C } from "../constants/colors";
+import { C } from "../constants/Colors";
 import { useAuth } from "../context/AuthContext";
 import { getOrderHistory, getOrder } from "../services/orderService";
 

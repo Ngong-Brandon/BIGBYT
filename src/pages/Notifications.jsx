@@ -1,6 +1,6 @@
 // src/pages/Notifications.jsx
 import { useState, useEffect } from "react";
-import { C } from "../constants/colors";
+import { C } from "../constants/Colors";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
 import {

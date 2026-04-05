@@ -1,5 +1,5 @@
 // src/components/RestaurantCard.jsx
-import { C } from "../constants/colors";
+import { C } from "../constants/Colors";
 
 export default function RestaurantCard({ r, onEnter }) {
 

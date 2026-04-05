@@ -1,7 +1,7 @@
 // src/pages/RestaurantMenu.jsx
 // ─── Pulls live menu from Supabase for the selected restaurant ────────────────
 import { useState, useEffect } from "react";
-import { C } from "../constants/colors";
+import { C } from "../constants/Colors";
 import { getMenu } from "../services/restaurantService";
 import { useCart } from "../context/CartContext";
 
