@@ -2,7 +2,7 @@
 // ─── Admin: create and send notification campaigns ────────────────────────────
 import { useState, useEffect } from "react";
 import { getCampaigns, createCampaign, sendCampaign } from "../services/notificationService";
-import { getAdminRestaurants } from "../services/adminService";
+import { getAdminRestaurants } from "../services/AdminService";
 
 const A = {
   bg: "#080808", surface: "#111111", card: "#161616",
