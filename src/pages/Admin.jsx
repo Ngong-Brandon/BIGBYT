@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAdmin } from "../hooks/useAdmin";
 import { useAuth } from "../context/AuthContext";
+import AdminCampaigns from "./AdminCampaigns";
 import {
   getDashboardStats, getRecentOrders, getAllOrders,
   updateOrderStatus, getAdminRestaurants, toggleRestaurantOpen,
@@ -756,6 +757,7 @@ const NAV = [
   { group: "SYSTEM", items: [
     { key: "reviews",     label: "Reviews",     icon: "⭐" },
     { key: "settings",    label: "Settings",    icon: "⚙️" },
+    { key: "campaigns", label: "Campaigns", icon: "📣" },
   ]},
 ];
 
@@ -792,6 +794,7 @@ export default function Admin({ go }) {
     users:       <AdminUsers />,
     reviews:     <AdminReviews />,
     settings:    <AdminSettings />,
+    campaigns: <AdminCampaigns />,
   };
 
   return (

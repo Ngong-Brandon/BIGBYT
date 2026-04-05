@@ -1,7 +1,7 @@
 // src/pages/RestaurantMenu.jsx
 // ─── Pulls live menu from Supabase for the selected restaurant ────────────────
 import { useState, useEffect } from "react";
-import { C } from "../constants/Colors";
+import { C } from "../constants/colors";
 import { getMenu } from "../services/restaurantService";
 import { useCart } from "../context/CartContext";
 
@@ -107,12 +107,12 @@ export default function RestaurantMenu({ restaurant, go }) {
 
             <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
               {[
-                ["⭐", `${restaurant.rating} (${restaurant.review_count} reviews)`],
-                ["⏱", restaurant.delivery_time],
-                ["🛵", `$${restaurant.delivery_fee} delivery`],
-                ["📦", `$${restaurant.min_order} min order`],
+                ["⭐", restaurant.rating ? `${Number(restaurant.rating).toFixed(1)} (${restaurant.review_count || 0} reviews)` : "New restaurant"],
+                ["⏱", restaurant.delivery_time || "25-35 min"],
+                ["🛵", restaurant.delivery_fee != null ? `$${Number(restaurant.delivery_fee).toFixed(2)} delivery` : "Free delivery"],
+                ["📦", restaurant.min_order != null ? `$${Number(restaurant.min_order).toFixed(2)} min order` : "No minimum"],
               ].map(([ic, val]) => (
-                <div key={val} style={{ fontSize: 13, fontWeight: 600, color: C.text }}>{ic} {val}</div>
+                <div key={ic} style={{ fontSize: 13, fontWeight: 600, color: C.text }}>{ic} {val}</div>
               ))}
             </div>
           </div>
