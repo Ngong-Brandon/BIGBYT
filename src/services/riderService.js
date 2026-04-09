@@ -12,7 +12,7 @@ export async function getRiderByToken(token) {
   return { rider: data, error };
 }
 
-// ── Get active order assigned to this rider ───────────────────────────────────
+// ── Get ALL active orders assigned to this rider (FIFO — oldest first) ──────────
 export async function getRiderActiveOrders(riderId) {
   const { data, error } = await supabase
     .from("orders")
@@ -25,10 +25,14 @@ export async function getRiderActiveOrders(riderId) {
     `)
     .eq("rider_id", riderId)
     .in("status", ["confirmed", "preparing", "on_the_way"])
-    .order("placed_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-  return { order: data, error };
+    .order("placed_at", { ascending: true }); // oldest first = FIFO
+  return { orders: data || [], error };
+}
+
+// Keep backward compat alias
+export async function getRiderActiveOrder(riderId) {
+  const { orders, error } = await getRiderActiveOrders(riderId);
+  return { order: orders?.[0] || null, error };
 }
 
 // ── Rider updates order status ────────────────────────────────────────────────
