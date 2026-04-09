@@ -14,7 +14,7 @@ import {
   getAdminMenuItems, toggleMenuItemAvailability,
   getAdminUsers, getAdminReviews, deleteReview, getAnalytics,
   createRestaurant, updateRestaurant, createMenuItem, updateMenuItem,
-} from "../services/adminService";
+} from "../services/AdminService";
 
 const A = {
   bg: "#080808", sidebar: "#0D0D0D", surface: "#111111", card: "#161616",
