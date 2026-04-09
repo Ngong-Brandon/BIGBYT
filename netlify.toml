@@ -3,6 +3,6 @@
   publish = "dist"
 
 [[redirects]]
-  from = "/*"
+  from = "/riders"
   to = "/index.html"
   status = 200

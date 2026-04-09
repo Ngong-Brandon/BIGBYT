@@ -1,7 +1,7 @@
 // src/pages/Admin.jsx
 // ─── Full admin dashboard — every click wired ─────────────────────────────────
 import { useState, useEffect } from "react";
-import { useAdmin } from "../hooks/useAdmin";
+import { useAdmin } from "../hooks/UseAdmin";
 import { useAuth } from "../context/AuthContext";
 import ImageUpload from "../components/ImageUpload";
 import AdminAdverts from "./AdminAdverts";
