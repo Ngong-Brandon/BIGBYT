@@ -5,7 +5,7 @@ import {
   getAllAdverts, createAdvert, updateAdvert,
   deactivateAdvert, deleteAdvert, daysRemaining, isExpired,
 } from "../services/advertisementService";
-import { getAdminRestaurants } from "../services/adminService";
+import { getAdminRestaurants } from "../services/AdminService";
 import ImageUpload from "../components/ImageUpload";
 import AppImage from "../components/AppImage";
 
