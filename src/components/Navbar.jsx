@@ -65,7 +65,7 @@ export default function Navbar({ screen, go }) {
             {/* User pill */}
             <div onClick={handleLogout} title="Logout"
               style={{ display:"flex", alignItems:"center", gap:8, padding:"6px 12px", background:C.surface, borderRadius:9, border:`1px solid ${C.border}`, cursor:"pointer" }}>
-              <span style={{ fontSize:12, color:C.muted }}>👤 {user.email?.split("@")[0]}</span>
+              <span style={{ fontSize:12, color:C.muted }}>👤 {user.email?.split("@")[0].slice(0,5)}...</span>
               <span style={{ color:C.error, fontSize:10, fontWeight:700 }}>OUT</span>
             </div>
           </>

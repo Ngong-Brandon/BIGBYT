@@ -13,7 +13,7 @@ export async function getRiderByToken(token) {
 }
 
 // ── Get active order assigned to this rider ───────────────────────────────────
-export async function getRiderActiveOrder(riderId) {
+export async function getRiderActiveOrders(riderId) {
   const { data, error } = await supabase
     .from("orders")
     .select(`

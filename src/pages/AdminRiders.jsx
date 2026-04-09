@@ -98,6 +98,8 @@ export default function AdminRiders() {
 
   async function handleAssign() {
     if (!selectedRider) return showToast("Select a rider", "error");
+    const chosen = riders.find(r => r.id === selectedRider);
+    if (!chosen?.is_online) return showToast("This rider is offline. Select an online rider.", "error");
     setAssigning(true);
     const { error } = await assignRiderToOrder(assignModal.id, selectedRider);
     setAssigning(false);

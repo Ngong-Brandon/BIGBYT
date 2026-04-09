@@ -467,7 +467,7 @@ const STAGES = [
   { key: "confirmed",  label: "Order Confirmed", sub: "We've received your order" },
   { key: "preparing",  label: "Preparing",        sub: "Kitchen is on it" },
   { key: "on_the_way", label: "On the Way",       sub: "Rider heading to you" },
-  { key: "delivered",  label: "Delivered",        sub: "Bon appétit!" },
+  { key: "delivered",  label: "Delivered",        sub: "Bon appétit! Have a Bigbyt!" },
 ];
 
 const STATUS_INDEX = { confirmed: 0, preparing: 1, on_the_way: 2, delivered: 3 };

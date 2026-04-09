@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import {
   getRiderByToken,
-  getRiderActiveOrder,
+  getRiderActiveOrders,
   riderUpdateStatus,
   setRiderOnline,
 } from "../services/riderService";
@@ -43,7 +43,8 @@ export default function Rider() {
   const token = new URLSearchParams(window.location.search).get("token");
 
   const [rider,    setRider]    = useState(null);
-  const [order,    setOrder]    = useState(null);
+  const [orders,   setOrders]   = useState([]);
+  const [order,    setOrder]    = useState(null); // current (first in queue)
   const [loading,  setLoading]  = useState(true);
   const [updating, setUpdating] = useState(false);
   const [error,    setError]    = useState(null);
@@ -73,8 +74,9 @@ export default function Rider() {
   }
 
   async function loadOrder(riderId) {
-    const { order: o } = await getRiderActiveOrder(riderId);
-    setOrder(o || null);
+    const { orders: queue } = await getRiderActiveOrders(riderId);
+    setOrders(queue || []);
+    setOrder(queue?.[0] || null); // first in queue = current
   }
 
   function showToast(msg, type = "success") {
@@ -96,9 +98,13 @@ export default function Rider() {
     showToast(labels[nextStatus] || "Updated ✓");
 
     if (nextStatus === "delivered") {
-      setOrder(null); // clear order — wait for next assignment
+      // Remove delivered order and advance to next in queue
+      const remaining = orders.filter(o => o.id !== orderId);
+      setOrders(remaining);
+      setOrder(remaining[0] || null);
     } else {
       setOrder(prev => ({ ...prev, status: nextStatus }));
+      setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: nextStatus } : o));
     }
   }
 
@@ -292,8 +298,33 @@ export default function Rider() {
             {/* Refresh */}
             <button onClick={() => loadOrder(rider.id)}
               style={{ width: "100%", marginTop: 12, background: "none", border: `1px solid ${R.border}`, borderRadius: 10, padding: "11px", color: R.muted, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
-              🔄 Refresh Order
+              🔄 Refresh
             </button>
+
+            {/* Queue — upcoming orders */}
+            {orders.length > 1 && (
+              <div style={{ marginTop: 20 }}>
+                <div style={{ fontSize: 12, color: R.muted, fontWeight: 700, letterSpacing: 1, fontFamily: "'DM Mono',monospace", marginBottom: 10 }}>
+                  UPCOMING ({orders.length - 1} more)
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {orders.slice(1).map((o, i) => (
+                    <div key={o.id} style={{ background: R.surface, border: `1px solid ${R.border}`, borderRadius: 12, padding: "12px 14px", display: "flex", alignItems: "center", gap: 12, opacity: 0.7 }}>
+                      <div style={{ width: 28, height: 28, borderRadius: "50%", background: R.card, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 800, color: R.muted, flexShrink: 0 }}>
+                        {i + 2}
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontWeight: 700, fontSize: 13 }}>{o.restaurant?.name}</div>
+                        <div style={{ fontSize: 11, color: R.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{o.delivery_address}</div>
+                      </div>
+                      <div style={{ fontSize: 12, color: R.accent, fontWeight: 700, fontFamily: "'DM Mono',monospace" }}>
+                        ${Number(o.total).toFixed(2)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>

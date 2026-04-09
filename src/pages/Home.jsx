@@ -68,7 +68,9 @@ export default function Home({ go, setActiveRestaurant, activeOrder, showToast }
   const [avgRating,         setAvgRating]         = useState(null);
   const [loading,           setLoading]           = useState(true);
 
-  const name             = profile?.full_name?.split(" ")[0] || user?.email?.split("@")[0] || "there";
+  const name             = profile?.full_name?.split(" ")[0] || user.email?.split("@")[0].slice(0,5)+"..." || "there";
+
+  
   const userNeighborhood = profile?.neighborhood || import.meta.env.VITE_DEFAULT_NEIGHBORHOOD || "Lekki Phase 1";
   const userCity         = profile?.city         || import.meta.env.VITE_DEFAULT_CITY         || "Lagos";
 

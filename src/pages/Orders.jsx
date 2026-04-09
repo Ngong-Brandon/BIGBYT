@@ -1,9 +1,9 @@
 // src/pages/Orders.jsx
-// ─── Real orders only — no mock data ─────────────────────────────────────────
 import { useState, useEffect } from "react";
 import { C } from "../constants/Colors";
 import { useAuth } from "../context/AuthContext";
 import { getOrderHistory } from "../services/orderService";
+import { supabase } from "../lib/supabase";
 import AppImage from "../components/AppImage";
 
 const STATUS = {
@@ -28,7 +28,33 @@ function timeAgo(dateStr) {
 
 function fmtPrice(n) { return `$${Number(n || 0).toFixed(2)}`; }
 
-// ─── Order card ───────────────────────────────────────────────────────────────
+// ─── Star Rating Component ─────────────────────────────────────────────────────
+function StarRating({ value, onChange, readonly = false }) {
+  const [hovered, setHovered] = useState(0);
+  return (
+    <div style={{ display: "flex", gap: 6 }}>
+      {[1, 2, 3, 4, 5].map(star => (
+        <span
+          key={star}
+          onClick={() => !readonly && onChange(star)}
+          onMouseEnter={() => !readonly && setHovered(star)}
+          onMouseLeave={() => !readonly && setHovered(0)}
+          style={{
+            fontSize: 28,
+            cursor: readonly ? "default" : "pointer",
+            opacity: star <= (hovered || value) ? 1 : 0.25,
+            transition: "opacity 0.1s",
+            filter: star <= (hovered || value) ? "none" : "grayscale(1)",
+          }}
+        >
+          ⭐
+        </span>
+      ))}
+    </div>
+  );
+}
+
+// ─── Order Card ───────────────────────────────────────────────────────────────
 function OrderCard({ order, onClick }) {
   const [hov, setHov] = useState(false);
   const s = STATUS[order.status] || STATUS.pending;
@@ -41,18 +67,10 @@ function OrderCard({ order, onClick }) {
 
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 14 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          {/* Restaurant image or emoji */}
-          <AppImage
-            src={order.restaurant?.image_url}
-            fallback={order.restaurant?.emoji || "🍽️"}
-            width={48} height={48}
-            borderRadius={13}
-          />
+          <AppImage src={order.restaurant?.image_url} fallback={order.restaurant?.emoji || "🍽️"} width={48} height={48} borderRadius={13} />
           <div>
             <div style={{ fontWeight: 800, fontSize: 15, color: C.text }}>{order.restaurant?.name}</div>
-            <div style={{ fontSize: 11, color: C.muted, marginTop: 2, fontFamily: "'DM Mono',monospace" }}>
-              {timeAgo(order.placed_at)}
-            </div>
+            <div style={{ fontSize: 11, color: C.muted, marginTop: 2, fontFamily: "'DM Mono',monospace" }}>{timeAgo(order.placed_at)}</div>
           </div>
         </div>
         <div style={{ background: s.bg, border: `1px solid ${s.color}44`, borderRadius: 8, padding: "4px 10px", display: "flex", alignItems: "center", gap: 5 }}>
@@ -61,12 +79,10 @@ function OrderCard({ order, onClick }) {
         </div>
       </div>
 
-      {/* Items preview */}
       <div style={{ fontSize: 13, color: C.muted, marginBottom: 14, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
         {order.items?.map(i => i.name).join(", ") || "No items"}
       </div>
 
-      {/* Bottom */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 14, borderTop: `1px solid ${C.border}` }}>
         <div>
           <span style={{ fontSize: 11, color: C.muted }}>{order.items?.length || 0} item{order.items?.length !== 1 ? "s" : ""}</span>
@@ -76,17 +92,73 @@ function OrderCard({ order, onClick }) {
         {order.status === "on_the_way" && (
           <div style={{ background: C.accent, borderRadius: 8, padding: "6px 12px", fontSize: 12, fontWeight: 800, color: "#fff" }}>Track →</div>
         )}
+        {order.status === "delivered" && !order.rating && (
+          <div style={{ background: `${C.success}18`, border: `1px solid ${C.success}44`, borderRadius: 8, padding: "5px 10px", fontSize: 11, fontWeight: 700, color: C.success }}>
+            ⭐ Rate order
+          </div>
+        )}
+        {order.status === "delivered" && order.rating && (
+          <div style={{ fontSize: 13 }}>{"⭐".repeat(order.rating)}</div>
+        )}
       </div>
     </div>
   );
 }
 
-// ─── Order detail ─────────────────────────────────────────────────────────────
-function OrderDetail({ order, onBack, go }) {
+// ─── Order Detail with Rating ─────────────────────────────────────────────────
+function OrderDetail({ order, onBack, go, onRated }) {
+  const { user } = useAuth();
   const s = STATUS[order.status] || STATUS.pending;
+
+  const [rating,    setRating]    = useState(order.rating || 0);
+  const [comment,   setComment]   = useState(order.comment || "");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted,  setSubmitted]  = useState(!!order.rating);
+  const [toast,      setToast]      = useState(null);
+
+  function showToast(msg, type = "success") {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 2500);
+  }
+
+  async function submitRating() {
+    if (!rating) return showToast("Please select a star rating", "error");
+    setSubmitting(true);
+
+    // Insert review into reviews table
+    const { error: reviewError } = await supabase
+      .from("reviews")
+      .upsert({
+        order_id:      order.id,
+        user_id:       user.id,
+        restaurant_id: order.restaurant_id,
+        rating,
+        comment: comment.trim() || null,
+      }, { onConflict: "order_id" });
+
+    if (reviewError) {
+      setSubmitting(false);
+      return showToast(reviewError.message || "Failed to submit review", "error");
+    }
+
+    // Update restaurant's average rating
+    await supabase.rpc("update_restaurant_rating", { p_restaurant_id: order.restaurant_id });
+
+    setSubmitting(false);
+    setSubmitted(true);
+    showToast("Review submitted! Thank you 🔥", "success");
+    if (onRated) onRated(order.id, rating);
+  }
 
   return (
     <div style={{ maxWidth: 600, margin: "0 auto", padding: "0 16px 100px" }}>
+
+      {toast && (
+        <div style={{ position: "fixed", top: 20, right: 20, background: toast.type === "error" ? C.error : C.success, color: "#fff", padding: "10px 18px", borderRadius: 10, fontWeight: 700, fontSize: 13, zIndex: 9999 }}>
+          {toast.msg}
+        </div>
+      )}
+
       <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "24px 0 16px", borderBottom: `1px solid ${C.border}`, marginBottom: 20 }}>
         <button onClick={onBack} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 9, width: 36, height: 36, cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", color: C.text }}>←</button>
         <span style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-0.5px" }}>Order Details</span>
@@ -162,6 +234,46 @@ function OrderDetail({ order, onBack, go }) {
         </div>
       </div>
 
+      {/* ── RATING SECTION — only for delivered orders ──────────────────── */}
+      {order.status === "delivered" && (
+        <div style={{ background: C.surface, border: `1px solid ${submitted ? C.success : C.border}`, borderRadius: 16, padding: 24, marginBottom: 20 }}>
+          {submitted ? (
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 36, marginBottom: 8 }}>🎉</div>
+              <div style={{ fontWeight: 800, fontSize: 16, color: C.success, marginBottom: 6 }}>Thanks for your review!</div>
+              <StarRating value={rating} readonly />
+              {comment && <div style={{ fontSize: 13, color: C.muted, marginTop: 10, fontStyle: "italic" }}>"{comment}"</div>}
+            </div>
+          ) : (
+            <>
+              <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4 }}>Rate your order</div>
+              <div style={{ fontSize: 13, color: C.muted, marginBottom: 18 }}>How was your experience with {order.restaurant?.name}?</div>
+
+              <div style={{ marginBottom: 16 }}>
+                <StarRating value={rating} onChange={setRating} />
+                {rating > 0 && (
+                  <div style={{ fontSize: 12, color: C.muted, marginTop: 6 }}>
+                    {["", "Poor", "Fair", "Good", "Great", "Excellent!"][rating]}
+                  </div>
+                )}
+              </div>
+
+              <textarea
+                value={comment}
+                onChange={e => setComment(e.target.value)}
+                placeholder="Tell us about your experience (optional)..."
+                style={{ width: "100%", background: C.card, border: `1.5px solid ${C.border}`, borderRadius: 10, padding: "12px 14px", color: C.text, fontFamily: "'Syne',sans-serif", fontSize: 13, outline: "none", resize: "none", height: 80, marginBottom: 14 }}
+              />
+
+              <button onClick={submitRating} disabled={submitting || !rating}
+                style={{ width: "100%", background: rating ? C.accent : C.card, color: rating ? "#fff" : C.muted, border: "none", padding: "13px", borderRadius: 11, fontSize: 15, fontWeight: 800, cursor: rating ? "pointer" : "not-allowed", fontFamily: "'Syne',sans-serif", transition: "all 0.15s" }}>
+                {submitting ? "Submitting..." : "Submit Review"}
+              </button>
+            </>
+          )}
+        </div>
+      )}
+
       {/* Actions */}
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {order.status === "delivered" && (
@@ -170,9 +282,9 @@ function OrderDetail({ order, onBack, go }) {
             🔄 Reorder from {order.restaurant?.name}
           </button>
         )}
-        <button onClick={() => go("home")}
+        <button onClick={onBack}
           style={{ width: "100%", background: C.surface, color: C.muted, border: `1px solid ${C.border}`, padding: 13, borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
-          Back to Home
+          Back to Orders
         </button>
       </div>
     </div>
@@ -182,26 +294,31 @@ function OrderDetail({ order, onBack, go }) {
 // ─── MAIN ORDERS PAGE ─────────────────────────────────────────────────────────
 export default function Orders({ go }) {
   const { user }  = useAuth();
-  const [orders,  setOrders]  = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [orders,   setOrders]   = useState([]);
+  const [loading,  setLoading]  = useState(true);
   const [selected, setSelected] = useState(null);
-  const [filter,  setFilter]  = useState("all");
+  const [filter,   setFilter]   = useState("all");
 
   useEffect(() => {
     async function load() {
       if (!user?.id) { setLoading(false); return; }
       const { orders: data, error } = await getOrderHistory(user.id);
-      // Real orders only — no mock fallback
       setOrders(error ? [] : (data || []));
       setLoading(false);
     }
     load();
   }, [user?.id]);
 
+  // Called after rating submitted — update order in list
+  function handleRated(orderId, rating) {
+    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, rating } : o));
+    if (selected?.id === orderId) setSelected(prev => ({ ...prev, rating }));
+  }
+
   if (selected) {
     return (
       <div style={{ fontFamily: "'Syne',sans-serif", color: C.text }}>
-        <OrderDetail order={selected} onBack={() => setSelected(null)} go={go} />
+        <OrderDetail order={selected} onBack={() => setSelected(null)} go={go} onRated={handleRated} />
       </div>
     );
   }
@@ -224,11 +341,12 @@ export default function Orders({ go }) {
     ["pending","confirmed","preparing","on_the_way"].includes(o.status)
   );
 
+  const unratedDelivered = orders.filter(o => o.status === "delivered" && !o.rating);
+
   return (
     <div style={{ fontFamily: "'Syne',sans-serif", color: C.text, maxWidth: 600, margin: "0 auto", padding: "0 16px 100px" }}>
       <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}`}</style>
 
-      {/* Header */}
       <div style={{ padding: "28px 0 16px", borderBottom: `1px solid ${C.border}`, marginBottom: 8 }}>
         <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.5px", marginBottom: 4 }}>My Orders</h1>
         <div style={{ fontSize: 12, color: C.muted }}>
@@ -249,7 +367,20 @@ export default function Orders({ go }) {
               <div style={{ fontSize: 11, color: "#ffffff99" }}>{activeOrders[0].restaurant?.name}</div>
             </div>
           </div>
-          <div style={{ background: "#fff2", borderRadius: 7, padding: "5px 12px", fontSize: 12, fontWeight: 700, color: "#fff" }}>Track →</div>
+          <div style={{ background: "#fff2", borderRadius: 7, padding: "5px 12px", fontSize: 12, fontWeight: 700, color: "#fff" }}>View →</div>
+        </div>
+      )}
+
+      {/* Rate prompt */}
+      {unratedDelivered.length > 0 && (
+        <div onClick={() => setSelected(unratedDelivered[0])}
+          style={{ background: `${C.success}12`, border: `1px solid ${C.success}44`, borderRadius: 14, padding: "12px 16px", display: "flex", alignItems: "center", gap: 12, cursor: "pointer", marginBottom: 14 }}>
+          <span style={{ fontSize: 22 }}>⭐</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontWeight: 700, fontSize: 14, color: C.success }}>Rate your last order</div>
+            <div style={{ fontSize: 12, color: C.muted }}>How was {unratedDelivered[0].restaurant?.name}?</div>
+          </div>
+          <span style={{ fontSize: 14, color: C.success }}>→</span>
         </div>
       )}
 
@@ -271,12 +402,9 @@ export default function Orders({ go }) {
       {/* Loading */}
       {loading ? (
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          {[1, 2, 3].map(i => (
-            <div key={i} style={{ height: 140, background: C.surface, borderRadius: 18, animation: "pulse 1.5s infinite" }} />
-          ))}
+          {[1, 2, 3].map(i => <div key={i} style={{ height: 140, background: C.surface, borderRadius: 18, animation: "pulse 1.5s infinite" }} />)}
         </div>
 
-      /* Empty state — no orders at all */
       ) : orders.length === 0 ? (
         <div style={{ textAlign: "center", padding: "80px 20px" }}>
           <div style={{ fontSize: 64, marginBottom: 16 }}>🛵</div>
@@ -290,17 +418,15 @@ export default function Orders({ go }) {
           </button>
         </div>
 
-      /* Empty state for filter */
       ) : filtered.length === 0 ? (
         <div style={{ textAlign: "center", padding: "60px 20px" }}>
           <div style={{ fontSize: 48, marginBottom: 14 }}>📦</div>
           <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 8 }}>No {filter} orders</div>
           <div style={{ fontSize: 14, color: C.muted }}>
-            {filter === "active" ? "You have no active orders right now" : `You have no ${filter} orders`}
+            {filter === "active" ? "No active orders right now" : `No ${filter} orders found`}
           </div>
         </div>
 
-      /* Orders list */
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {filtered.map(order => (

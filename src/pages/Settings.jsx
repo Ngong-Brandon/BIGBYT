@@ -423,7 +423,7 @@ export default function Settings({ go }) {
 
   async function handleLogout() { await logout(); go("landing"); }
 
-  const name     = profile?.full_name || user?.email?.split("@")[0] || "User";
+  const name     = profile?.full_name || user.email?.split("@")[0].slice(0,5)+'...' || "User";
   const initials = name.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase();
 
   const wrap = children => (
