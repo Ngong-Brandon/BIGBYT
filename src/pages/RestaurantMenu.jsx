@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { C } from "../constants/Colors";
 import { getMenu } from "../services/restaurantService";
 import { useCart } from "../context/CartContext";
+import AppImage from "../components/AppImage";
 
 export default function RestaurantMenu({ restaurant, go }) {
   const { addToCart, removeFromCart, getItemInCart, cartCount, cartSubtotal } = useCart();
@@ -82,7 +83,7 @@ export default function RestaurantMenu({ restaurant, go }) {
           <div style={{ width: 72, height: 72, background: C.card, borderRadius: 18, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 38, border: `1px solid ${C.border}`, flexShrink: 0, overflow: "hidden" }}>
             {restaurant.logo_url
               ? <img src={restaurant.logo_url} alt={restaurant.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              : restaurant.emoji || "🍽️"
+              : <AppImage src={restaurant.image_url} fallback={restaurant.emoji || "🍽️"} width={72} height={72} borderRadius={18} />
             }
           </div>
 
@@ -159,7 +160,7 @@ export default function RestaurantMenu({ restaurant, go }) {
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                     {item.image_url
                       ? <img src={item.image_url} alt={item.name} style={{ width: 56, height: 56, borderRadius: 12, objectFit: "cover" }} />
-                      : <span style={{ fontSize: 42 }}>{item.emoji || "🍽️"}</span>
+                      : <span style={{ fontSize: 42 }}><AppImage src={item.image_url} fallback={item.emoji || "🍽️"} width={80} height={80} borderRadius={12} /></span>
                     }
                     {item.is_popular && (
                       <span style={{ background: C.goldDim, color: C.gold, border: `1px solid ${C.gold}44`, borderRadius: 100, padding: "3px 10px", fontSize: 10, fontWeight: 700 }}>

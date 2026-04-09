@@ -1,16 +1,20 @@
 // src/pages/Admin.jsx
 // ─── Full admin dashboard — every click wired ─────────────────────────────────
 import { useState, useEffect } from "react";
-import { useAdmin } from "../hooks/UseAdmin";
+import { useAdmin } from "../hooks/useAdmin";
 import { useAuth } from "../context/AuthContext";
+import ImageUpload from "../components/ImageUpload";
+import AdminAdverts from "./AdminAdverts";
+import AdminRiders from "./AdminRiders";
 import AdminCampaigns from "./AdminCampaigns";
+import AppImage from "../components/AppImage";
 import {
   getDashboardStats, getRecentOrders, getAllOrders,
   updateOrderStatus, getAdminRestaurants, toggleRestaurantOpen,
   getAdminMenuItems, toggleMenuItemAvailability,
   getAdminUsers, getAdminReviews, deleteReview, getAnalytics,
   createRestaurant, updateRestaurant, createMenuItem, updateMenuItem,
-} from "../services/AdminService";
+} from "../services/adminService";
 
 const A = {
   bg: "#080808", sidebar: "#0D0D0D", surface: "#111111", card: "#161616",
@@ -327,7 +331,7 @@ function AdminRestaurants() {
   const [confirm, setConfirm] = useState(null);
   const [saving, setSaving] = useState(false);
 
-  const EMPTY_FORM = { name: "", cuisine_tags: "", neighborhood: "", city: "Lagos", emoji: "🍽️", delivery_time: "25–35 min", delivery_fee: "2.99", min_order: "8.00", description: "" };
+  const EMPTY_FORM = { name: "", cuisine_tags: "", neighborhood: "", city: "Lagos", emoji: "🍽️", image_url: "", delivery_time: "25–35 min", delivery_fee: "2.99", min_order: "8.00", description: "" };
   const [form, setForm] = useState(EMPTY_FORM);
 
   useEffect(() => { getAdminRestaurants().then(({ restaurants }) => setRestaurants(restaurants)); }, []);
@@ -387,7 +391,7 @@ function AdminRestaurants() {
         empty={restaurants.length === 0 ? "No restaurants yet" : null}>
         {restaurants.map(r => (
           <Tr key={r.id}>
-            <Td><div style={{ display: "flex", alignItems: "center", gap: 8 }}><span style={{ fontSize: 20 }}>{r.emoji}</span><span style={{ fontWeight: 700 }}>{r.name}</span></div></Td>
+            <Td><div style={{ display: "flex", alignItems: "center", gap: 10 }}><AppImage src={r.image_url} fallback={r.emoji||"🍽️"} width={36} height={36} borderRadius={9} /><span style={{ fontWeight: 700 }}>{r.name}</span></div></Td>
             <Td muted>{r.cuisine_tags?.join(" · ")}</Td>
             <Td muted>{r.neighborhood}</Td>
             <Td><span style={{ color: A.warning, fontWeight: 700 }}>⭐ {r.rating}</span></Td>
@@ -404,6 +408,13 @@ function AdminRestaurants() {
 
       {modal && (
         <Modal title={modal === "add" ? "Add Restaurant" : `Edit — ${modal.name}`} onClose={() => setModal(null)}>
+          {/* Restaurant image upload */}
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: 11, color: A.muted, marginBottom: 8, fontWeight: 700 }}>RESTAURANT IMAGE</div>
+            <ImageUpload bucket="restaurants" folder="restaurants" currentUrl={form.image_url}
+              onUpload={url => setForm(p => ({ ...p, image_url: url }))}
+              shape="wide" label="Upload restaurant photo" />
+          </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
             {FIELDS.map(([label, key, ph]) => (
               <div key={key} style={{ gridColumn: ["description", "cuisine_tags"].includes(key) ? "1 / -1" : "auto" }}>
@@ -447,12 +458,7 @@ function AdminMenuItems() {
   async function handleSave() {
     if (!form.name || !form.price || !form.restaurant_id) return show("Name, price and restaurant are required", "error");
     setSaving(true);
-    const payload = {
-  ...form,
-  price:       parseFloat(form.price),
-  category_id: form.category_id || null,  // ← convert empty string to null
-  restaurant_id: form.restaurant_id || null,
-};
+    const payload = { ...form, price: parseFloat(form.price) };
 
     if (modal === "add") {
       const { item, error } = await createMenuItem(payload);
@@ -493,7 +499,7 @@ function AdminMenuItems() {
         empty={filtered.length === 0 ? "No items found" : null}>
         {filtered.map(item => (
           <Tr key={item.id}>
-            <Td><div style={{ display: "flex", alignItems: "center", gap: 8 }}><span style={{ fontSize: 18 }}>{item.emoji}</span><span style={{ fontWeight: 700 }}>{item.name}</span></div></Td>
+            <Td><div style={{ display: "flex", alignItems: "center", gap: 10 }}><AppImage src={item.image_url} fallback={item.emoji||"🍽️"} width={34} height={34} borderRadius={8} /><span style={{ fontWeight: 700 }}>{item.name}</span></div></Td>
             <Td muted>{item.restaurant?.name}</Td>
             <Td muted>{item.category?.name || "—"}</Td>
             <Td accent>${Number(item.price).toFixed(2)}</Td>
@@ -512,6 +518,13 @@ function AdminMenuItems() {
       {modal && (
         <Modal title={modal === "add" ? "Add Menu Item" : `Edit — ${modal.name}`} onClose={() => setModal(null)}>
           <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 16 }}>
+            {/* Menu item image upload */}
+            <div>
+              <div style={{ fontSize: 11, color: A.muted, marginBottom: 8, fontWeight: 700 }}>ITEM IMAGE</div>
+              <ImageUpload bucket="menu-items" folder="items" currentUrl={form.image_url}
+                onUpload={url => setForm(p => ({ ...p, image_url: url }))}
+                size={100} label="Upload food photo" />
+            </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <Inp label="Name"  value={form.name}  onChange={v => setForm(p => ({ ...p, name: v }))}  placeholder="Smash Burger Stack" />
               <Inp label="Price" value={form.price} onChange={v => setForm(p => ({ ...p, price: v }))} placeholder="14.99" type="number" />
@@ -753,11 +766,13 @@ const NAV = [
     { key: "restaurants", label: "Restaurants", icon: "🍽️" },
     { key: "menu",        label: "Menu Items",  icon: "📋" },
     { key: "users",       label: "Users",        icon: "👥" },
+    { key: "adverts",     label: "Advertisements", icon: "📢" },
+    { key: "riders",      label: "Riders",          icon: "🛵" },
   ]},
   { group: "SYSTEM", items: [
+    { key: "campaigns",   label: "Campaigns",   icon: "📣" },
     { key: "reviews",     label: "Reviews",     icon: "⭐" },
     { key: "settings",    label: "Settings",    icon: "⚙️" },
-    { key: "campaigns", label: "Campaigns", icon: "📣" },
   ]},
 ];
 
@@ -792,9 +807,11 @@ export default function Admin({ go }) {
     restaurants: <AdminRestaurants />,
     menu:        <AdminMenuItems />,
     users:       <AdminUsers />,
+    adverts:     <AdminAdverts />,
+    riders:      <AdminRiders />,
+    campaigns:   <AdminCampaigns />,
     reviews:     <AdminReviews />,
     settings:    <AdminSettings />,
-    campaigns: <AdminCampaigns />,
   };
 
   return (

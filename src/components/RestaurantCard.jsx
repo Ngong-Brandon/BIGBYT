@@ -1,50 +1,51 @@
 // src/components/RestaurantCard.jsx
+import { useState } from "react";
 import { C } from "../constants/Colors";
+import AppImage from "./AppImage";
 
-export default function RestaurantCard({ r, onEnter }) {
+export default function RestaurantCard({ restaurant: r, onClick }) {
+  const [hov, setHov] = useState(false);
+  if (!r) return null;
 
-  
   return (
-    <div
-      className="card"
-      onClick={r.is_open ? onEnter : undefined}
-      style={{
-        background: C.card, border: `1px solid ${C.border}`, borderRadius: 20,
-        padding: 22, cursor: r.is_open ? "pointer" : "not-allowed",
-        opacity: r.is_open ? 1 : 0.6, position: "relative", overflow: "hidden",
-      }}
-    >
-      {r.tag && (
-        <div style={{
-          position: "absolute", top: 14, right: 14,
-          background: C.accentDim, color: C.accent, border: `1px solid ${C.accentBorder}`,
-          borderRadius: 8, padding: "3px 10px", fontSize: 10, fontWeight: 700,
-        }}>
-          {r.tag}
-        </div>
-      )}
+    <div onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{ background: C.surface, border: `1px solid ${hov ? "#FF450055" : C.border}`, borderRadius: 18, overflow: "hidden", cursor: "pointer", transform: hov ? "translateY(-2px)" : "none", transition: "all 0.18s" }}>
 
-      <div style={{ fontSize: 44, marginBottom: 14 }}>{r.emoji}</div>
-      <div style={{ fontWeight: 800, fontSize: 17, marginBottom: 3, color: C.text }}>{r.name}</div>
-      <div style={{ color: C.muted, fontSize: 13, marginBottom: 4 }}>{r.cuisine_tags}</div>
-      <div style={{ color: C.muted, fontSize: 12, marginBottom: 14 }}>📍 {r.neighborhood}</div>
-
-      <div style={{
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-        borderTop: `1px solid ${C.border}`, paddingTop: 14,
-      }}>
-        <div style={{ display: "flex", gap: 12, fontSize: 12, color: C.muted }}>
-          <span>⏱ {r.delivery_time}</span>
-          <span>🛵 ${r.delivery_fee}</span>
+      {/* Image */}
+      <div style={{ width: "100%", height: 140, position: "relative", overflow: "hidden" }}>
+        <AppImage
+          src={r.image_url}
+          fallback={r.emoji || "🍽️"}
+          width="100%"
+          height={140}
+          borderRadius={0}
+          style={{ width: "100%", height: 140, objectFit: "cover" }}
+        />
+        {/* Open/Closed badge */}
+        <div style={{ position: "absolute", top: 10, right: 10, background: r.is_open ? `${C.success}dd` : `${C.error}dd`, borderRadius: 7, padding: "3px 9px", fontSize: 10, fontWeight: 800, color: "#fff" }}>
+          {r.is_open ? "OPEN" : "CLOSED"}
         </div>
-        <span style={{ color: C.gold, fontWeight: 800, fontSize: 13 }}>⭐ {r.rating}</span>
+        {r.is_featured && (
+          <div style={{ position: "absolute", top: 10, left: 10, background: `${C.accent}dd`, borderRadius: 7, padding: "3px 9px", fontSize: 10, fontWeight: 800, color: "#fff" }}>
+            FEATURED
+          </div>
+        )}
       </div>
 
-      {!r.is_open && (
-        <div style={{ marginTop: 10, fontSize: 11, fontWeight: 700, color: C.error }}>
-          Currently Closed
+      {/* Info */}
+      <div style={{ padding: "14px 16px" }}>
+        <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 3, color: C.text }}>{r.name}</div>
+        <div style={{ fontSize: 12, color: C.muted, marginBottom: 12 }}>
+          {r.cuisine_tags?.join(" · ")}
         </div>
-      )}
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: C.muted, borderTop: `1px solid ${C.border}`, paddingTop: 10 }}>
+          <span>⏱ {r.delivery_time || "25–35 min"}</span>
+          <span>🛵 {r.delivery_fee != null ? `$${Number(r.delivery_fee).toFixed(2)}` : "Free"}</span>
+          <span style={{ color: "#F5A623", fontWeight: 700 }}>⭐ {r.rating || "New"}</span>
+        </div>
+      </div>
     </div>
   );
 }

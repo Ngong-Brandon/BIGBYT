@@ -5,6 +5,7 @@ import { C } from "../constants/Colors";
 import { getRestaurants, searchRestaurants } from "../services/restaurantService";
 import RestaurantCard from "../components/RestaurantCard";
 import { useAuth } from "../context/AuthContext";
+import { useGeolocation } from "../hooks/useGeolocation";
 
 export default function Restaurants({ go, setActiveRestaurant }) {
   const { user, profile } = useAuth();
@@ -20,9 +21,9 @@ export default function Restaurants({ go, setActiveRestaurant }) {
 
   // ── Detect user neighborhood from profile or fallback ─────────────────────
   // !! REPLACE with real geolocation or user profile neighborhood later !!
-  const userNeighborhood = profile?.neighborhood || import.meta.env.VITE_DEFAULT_NEIGHBORHOOD || "Lekki Phase 1";
-const userCity         = profile?.city         || import.meta.env.VITE_DEFAULT_CITY         || "Lagos";
-
+ const { city, neighborhood } = useGeolocation();
+const userCity         = city         || import.meta.env.VITE_DEFAULT_CITY;
+const userNeighborhood = neighborhood || import.meta.env.VITE_DEFAULT_NEIGHBORHOOD;
 
 
 
@@ -36,7 +37,9 @@ const userCity         = profile?.city         || import.meta.env.VITE_DEFAULT_C
     async function load() {
       setLoading(true);
       
-      const { restaurants, error } = await getRestaurants({ city: userCity });
+      const { restaurants, error } = await getRestaurants();
+    
+      
       
       
       if (error) {
@@ -44,8 +47,10 @@ const userCity         = profile?.city         || import.meta.env.VITE_DEFAULT_C
         // console.error(error);
       } else {
         // Sort: nearby first, then featured, then by rating
-        const nearby = restaurants.filter(r => r.neighborhood === userNeighborhood);
-        const others  = restaurants.filter(r => r.neighborhood !== userNeighborhood);
+        const nearby = restaurants.filter(r => r.neighborhood && r.neighborhood?.toLowerCase() === userNeighborhood?.toLowerCase());
+        const others  = restaurants.filter(r => r.neighborhood && r.neighborhood?.toLowerCase() !== userNeighborhood?.toLowerCase());
+       
+        
         setAllRestaurants([...nearby, ...others]);
       }
       setLoading(false);
@@ -71,8 +76,10 @@ const userCity         = profile?.city         || import.meta.env.VITE_DEFAULT_C
     go("restaurant");
   }
 
-  const nearby = allRestaurants.filter(r => r.neighborhood === userNeighborhood);
-  const others  = allRestaurants.filter(r => r.neighborhood !== userNeighborhood);
+  const nearby = allRestaurants.filter(r => r.neighborhood && r.neighborhood?.toLowerCase() === userNeighborhood?.toLowerCase());
+  const others  = allRestaurants.filter(r => r.neighborhood && r.neighborhood?.toLowerCase() !== userNeighborhood?.toLowerCase());
+  const showNearby = nearby.length > 0;
+  const displayList = showNearby ? others : allRestaurants;
   const isSearching = search.trim().length > 0;
 
   // ── Skeleton loader ────────────────────────────────────────────────────────
@@ -138,8 +145,8 @@ const userCity         = profile?.city         || import.meta.env.VITE_DEFAULT_C
             {!searching && <strong style={{ color: C.text }}>"{search}"</strong>}
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 16 }}>
-            {searchResults.map(r => (
-              <RestaurantCard key={r.id} r={r} onEnter={() => enter(r)} />
+            {searchResults.filter(Boolean).map(r => (
+              <RestaurantCard key={r.id} restaurant={r} onClick={() => enter(r)} />
             ))}
           </div>
           {!searching && searchResults.length === 0 && (
@@ -162,7 +169,7 @@ const userCity         = profile?.city         || import.meta.env.VITE_DEFAULT_C
                 </span>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 16, marginBottom: 40 }}>
-                {nearby.map(r => <RestaurantCard key={r.id} r={r} onEnter={() => enter(r)} />)}
+                {showNearby &&nearby.filter(Boolean).map(r => <RestaurantCard key={r.id} restaurant={r} onClick={() => enter(r)} />)}
               </div>
             </>
           )}
@@ -172,7 +179,7 @@ const userCity         = profile?.city         || import.meta.env.VITE_DEFAULT_C
             <>
               <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 18, color: C.text }}>🌆 More in {userCity}</h2>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 16 }}>
-                {others.map(r => <RestaurantCard key={r.id} r={r} onEnter={() => enter(r)} />)}
+                {others.filter(Boolean).map(r =><RestaurantCard key={r.id} restaurant={r} onClick={() => enter(r)} /> )}
               </div>
             </>
           )}

@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 import Notifications from "./pages/Notifications";
 import Orders from "./pages/Orders";
 import Admin from "./pages/Admin";
+import Rider from "./pages/Rider";
 
 
 
@@ -42,11 +43,17 @@ const GLOBAL_CSS = `
 `;
 
 function Inner() {
+   if (window.location.search.includes("token=")) {
+  return <Rider />;
+}
+
+
   const { user,loading } = useAuth();
   const [screen, setScreen]                     = useState("landing");
   const [animKey, setAnimKey]                   = useState(0);
   const [toast, setToast]                       = useState(null);
   const [activeRestaurant, setActiveRestaurant] = useState(null);
+  const [customerLocation, setCustomerLocation] = useState(null);
 
   function go(s) {
     setAnimKey(k => k + 1);
@@ -58,6 +65,7 @@ function Inner() {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 2500);
   }
+ 
 
   // Restore screen on session load
   // useEffect(() => {
@@ -87,6 +95,10 @@ useEffect(() => {
     if (authScreens.includes(screen)) setScreen("home"); // ← change to "home"
   }
 }, [user, loading]);
+
+if (window.location.pathname === "/rider") {
+  return <Rider />;
+}
 
 
 
@@ -129,6 +141,12 @@ useEffect(() => {
         {screen === "notifications" && <Notifications go={go} />}
         {screen === "orders" && <Orders go={go} />}
         {screen === "admin" && <Admin go={go} />}
+        {screen === "checkout" && (
+  <Checkout go={go} showToast={showToast} setCustomerLocation={setCustomerLocation} />
+)}
+{screen === "tracking" && (
+  <Tracking go={go} customerLocation={customerLocation} />
+)}
         {screen === "home" && (
       <Home
          go={go}
@@ -153,8 +171,13 @@ useEffect(() => {
 
 
 export default function App() {
+  if (window.location.pathname === "/rider") {
+  return <Rider />;
+}
   return (
+    
     <AuthProvider>
+      
       <CartProvider>
         <Inner />
       </CartProvider>

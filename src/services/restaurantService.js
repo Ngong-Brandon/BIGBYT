@@ -7,30 +7,29 @@ import { supabase } from "../lib/supabase";
 
 // Pass userNeighborhood to sort nearby ones to the top in the UI 
 // (Supabase doesn't do custom sort natively here, so we sort in JS after fetch) 
-export async function getRestaurants({ city } = {}) { 
-  let query = supabase 
-    .from("restaurants") 
-    .select(` 
-      id, name, description, cuisine_tags, neighborhood, city, 
-      address, phone, emoji, rating, review_count, 
-      delivery_time, delivery_fee, min_order, 
-      is_open, is_featured, logo_url, banner_url 
-    `) 
-    .order("is_featured", { ascending: false }) 
-    .order("rating", { ascending: false }); 
- 
-  // !! REPLACE "Lagos" with dynamic city detection / user preference !! 
-  if (city) { 
-    query = query.eq("city", city); 
-  } 
- 
-  const { data, error } = await query; 
+export async function getRestaurants() {
+  const { data, error } = await supabase
+    .from("restaurants")
+    .select("*")
+    .order("name");
+  return { restaurants: data || [], error };
+}
 
-  
-  return { restaurants: data || [], error }; 
-} 
- 
- 
+// ── GET POPULAR ITEMS ─────────────────────────────────────────────────────────
+export async function getPopularItems(limit = 6) {
+  const { data, error } = await supabase
+    .from("menu_items")
+    .select(`
+      id, name, description, price, emoji, image_url,
+      restaurant_id,
+      restaurant:restaurants(id, name, emoji, image_url)
+    `)
+    .eq("is_popular", true)
+    .eq("is_available", true)
+    .limit(limit);
+  return { items: data || [], error };
+}
+
 // ── GET SINGLE RESTAURANT 
 
 export async function getRestaurant(restaurantId) { 
