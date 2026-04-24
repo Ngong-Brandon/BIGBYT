@@ -71,8 +71,8 @@ export default function Home({ go, setActiveRestaurant, activeOrder, showToast }
   const name             = profile?.full_name?.split(" ")[0] || user.email?.split("@")[0].slice(0,5)+"..." || "there";
 
   
-  const userNeighborhood = profile?.neighborhood || import.meta.env.VITE_DEFAULT_NEIGHBORHOOD || "Lekki Phase 1";
-  const userCity         = profile?.city         || import.meta.env.VITE_DEFAULT_CITY         || "Lagos";
+  const userNeighborhood = profile?.neighborhood || import.meta.env.VITE_DEFAULT_NEIGHBORHOOD || "Molyko";
+  const userCity         = profile?.city         || import.meta.env.VITE_DEFAULT_CITY         || "Buea";
 
   const EMOJI_MAP = {
     burgers:"🍔", sushi:"🍣", pizza:"🍕", indian:"🍛", healthy:"🥗",
@@ -272,7 +272,7 @@ export default function Home({ go, setActiveRestaurant, activeOrder, showToast }
             {[1,2,3,4].map(i => <Skeleton key={i} w="calc(50% - 6px)" h={160} />)}
           </div>
         ) : nearbyRestaurants.length > 0 ? (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
             {nearbyRestaurants.filter(Boolean).map(r => (
               <RestaurantMini key={r.id} r={r} onEnter={() => { setActiveRestaurant(r); go("restaurant"); }} />
             ))}
@@ -334,9 +334,9 @@ export default function Home({ go, setActiveRestaurant, activeOrder, showToast }
                   onMouseLeave={e => e.currentTarget.style.borderColor = C.border}>
                   <AppImage src={item.image_url} fallback={item.emoji || "🍽️"} width={148} height={100} borderRadius={0} style={{ width: 148, height: 100, objectFit: "cover" }} />
                   <div style={{ padding: "10px 12px" }}>
-                    <div style={{ fontWeight: 800, fontSize: 13, marginBottom: 2, color: C.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.name}</div>
+                    <div style={{ fontWeight: 800, fontSize: 13, marginBottom: 2, color: C.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.name.length > 11 ? `${item.name.substring(0, 11)}...` : item.name}</div>
                     <div style={{ fontSize: 11, color: C.muted, marginBottom: 6, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.restaurant?.name}</div>
-                    <div style={{ fontWeight: 800, color: C.accent, fontSize: 14, fontFamily: "'DM Mono',monospace" }}>${Number(item.price).toFixed(2)}</div>
+                    <div style={{ fontWeight: 800, color: C.accent, fontSize: 14, fontFamily: "'DM Mono',monospace" }}>{Number(item.price).toFixed(2)}XAF</div>
                   </div>
                 </div>
               ))

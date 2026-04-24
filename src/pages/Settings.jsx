@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { C } from "../constants/Colors";
 import { useAuth } from "../context/AuthContext";
+import ImageUpload from "../components/ImageUpload";
 import { updateProfile } from "../services/AuthService";
 import { supabase } from "../lib/supabase";
 import { addAddress, deleteAddress, getAddresses, setDefaultAddress } from "../services/addressService";
@@ -67,17 +68,21 @@ function EditProfile({ onBack, showToast }) {
   const { user, profile } = useAuth();
   const [name,   setName]   = useState(profile?.full_name || "");
   const [phone,  setPhone]  = useState(profile?.phone     || "");
+  const [avatar, setAvatar] = useState(profile?.avatar_url || "");
   const [saving, setSaving] = useState(false);
+
 
   useEffect(() => {
     if (profile?.full_name) setName(profile.full_name);
     if (profile?.phone)     setPhone(profile.phone);
+    if (profile?.avatar_url) setAvatar(profile.avatar_url);
   }, [profile]);
 
   async function save() {
     if (!name.trim()) return showToast("Name cannot be empty", "error");
     setSaving(true);
-    const { error } = await updateProfile(user.id, { full_name: name.trim(), phone: phone.trim() || null });
+    const { error } = await updateProfile(user.id, { full_name: name.trim(), phone: phone.trim() || null, avatar_url: avatar || null });
+    
     setSaving(false);
     if (error) return showToast(error.message || "Failed to update", "error");
     showToast("Profile updated!", "success");
@@ -88,9 +93,48 @@ function EditProfile({ onBack, showToast }) {
   return (
     <div>
       <BackHeader title="Edit Profile" onBack={onBack} />
-      <div style={{ textAlign:"center", padding:"8px 0 20px" }}>
-        <div style={{ width:72, height:72, borderRadius:"50%", background:C.accent, display:"flex", alignItems:"center", justifyContent:"center", fontSize:24, fontWeight:800, color:"#fff", margin:"0 auto" }}>{initials}</div>
+      <div style={{ textAlign: "center", padding: "8px 0 20px" }}>
+  {avatar ? (
+    // Show uploaded photo
+    <div style={{ position: "relative", width: 80, height: 80, margin: "0 auto" }}>
+      <img src={avatar} alt="avatar"
+        style={{ width: 80, height: 80, borderRadius: "50%", objectFit: "cover", border: `3px solid ${C.accent}` }} />
+      <button onClick={() => setAvatar("")}
+        style={{ position: "absolute", top: -4, right: -4, width: 22, height: 22, borderRadius: "50%", background: C.error, border: "none", color: "#fff", fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        ×
+      </button>
+    </div>
+  ) : (
+    // Show initials + upload prompt
+   
+    
+    <div style={{ position: "relative", width: 80, height: 80, margin: "0 auto" }}>
+     {profile?.avatar_url ? ( 
+  <img src={profile.avatar_url} alt="avatar"
+    style={{ width: 64, height: 64, borderRadius: "50%", objectFit: "cover", flexShrink: 0, border: `2px solid ${C.accent}` }} />
+) : (
+  <div style={{ width: 64, height: 64, borderRadius: "50%", background: C.accent, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, fontWeight: 800, color: "#fff", flexShrink: 0 }}>
+    {initials}
+  </div>
+)}
+      <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "rgba(0,0,0,0.45)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <ImageUpload
+          bucket="restaurants"   // reuse existing bucket
+          folder="avatars"
+          currentUrl=""
+          onUpload={url => setAvatar(url)}
+          size={80}
+          shape="circle"
+          label="📷"
+        />
       </div>
+    </div>
+  )}
+  <div style={{ fontSize: 12, color: C.accent, fontWeight: 700, marginTop: 8, cursor: "pointer" }}
+    onClick={() => document.querySelector('input[type="file"]')?.click()}>
+    {avatar ? "Change Photo" : "Upload Photo"}
+  </div>
+</div>
       <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:20, padding:24, display:"flex", flexDirection:"column", gap:14, marginBottom:16 }}>
         <div><span style={lbl}>FULL NAME</span><input value={name} onChange={e=>setName(e.target.value)} placeholder="Your full name" style={inp()} /></div>
         <div><span style={lbl}>EMAIL</span><input value={user?.email||""} disabled style={inp({ opacity:0.5, cursor:"not-allowed" })} /><div style={{ fontSize:11, color:C.muted, marginTop:4 }}>Email cannot be changed</div></div>
@@ -450,7 +494,16 @@ export default function Settings({ go }) {
     <>
       <div style={{ padding:"32px 8px 20px", borderBottom:`1px solid ${C.border}` }}>
         <div style={{ display:"flex", alignItems:"center", gap:16 }}>
-          <div style={{ width:64, height:64, borderRadius:"50%", background:C.accent, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, fontWeight:800, color:"#fff", flexShrink:0 }}>{initials}</div>
+          <div style={{ width:64, height:64, borderRadius:"50%", background:C.accent, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, fontWeight:800, color:"#fff", flexShrink:0 }}>
+                 {profile?.avatar_url ? ( 
+  <img src={profile.avatar_url} alt="avatar"
+    style={{ width: 64, height: 64, borderRadius: "50%", objectFit: "cover", flexShrink: 0, border: `2px solid ${C.accent}` }} />
+) : (
+  <div style={{ width: 64, height: 64, borderRadius: "50%", background: C.accent, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, fontWeight: 800, color: "#fff", flexShrink: 0 }}>
+    {initials}
+  </div>
+)}
+            </div>
           <div>
             <div style={{ fontSize:20, fontWeight:800, letterSpacing:"-0.5px" }}>{name}</div>
             <div style={{ fontSize:13, color:C.muted, marginTop:2 }}>{user?.email}</div>
@@ -483,7 +536,7 @@ export default function Settings({ go }) {
       <Section title="Preferences">
         <Row icon="📍" label="Location"            sub="Lekki Phase 1, Lagos"          onClick={()=>showToast("Location settings coming soon","info")} />
         <Row icon="🌍" label="Language"            sub="English"                       onClick={()=>showToast("Language settings coming soon","info")} />
-        <Row icon="💰" label="Currency"            sub="USD ($)"                       onClick={()=>showToast("Currency settings coming soon","info")} />
+        <Row icon="💰" label="Currency"            sub="FRANCS (FCFA)"                       onClick={()=>showToast("Currency settings coming soon","info")} />
         <Row icon="🥗" label="Dietary Preferences" sub="Halal, no known allergies"     onClick={()=>setSub("dietary")} last />
       </Section>
 

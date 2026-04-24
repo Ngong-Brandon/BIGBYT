@@ -22,7 +22,10 @@ export function AuthProvider({ children }) {
   // Profile row may not exist yet if trigger hasn't fired
   async function fetchProfile(userId) {
     for (let i = 0; i < 4; i++) {
-      const { profile: p } = await getProfile(userId);
+      const { profile: p } = await getProfile(userId) || JSON.parse(localStorage.getItem("profile") || "null") || {};
+       localStorage.setItem("profile", JSON.stringify(p)); // Cache profile in case of future timeouts
+     
+      
       if (p) return p;
       // Wait before retrying (500ms, 1s, 2s)
       await new Promise(r => setTimeout(r, 500 * Math.pow(2, i)));
@@ -46,6 +49,12 @@ export function AuthProvider({ children }) {
           const timeoutPromise = new Promise(r => setTimeout(() => r(null), 6000));
           const p = await Promise.race([profilePromise, timeoutPromise]);
           setProfile(p);
+          
+          
+          
+          
+          
+          
         }
       }
 
@@ -114,6 +123,8 @@ export function AuthProvider({ children }) {
       setUser(data.user);
       const p = await fetchProfile(data.user.id);
       setProfile(p);
+     
+      
     }
 
     return { data, error };
@@ -127,10 +138,14 @@ export function AuthProvider({ children }) {
     setPendingEmail(null);
   }
 
+  
+  const lProfile =  profile || JSON.parse(localStorage.getItem("profile") || "null");
+
+
   return (
     <AuthContext.Provider value={{
       user,
-      profile,
+      profile: lProfile,
       loading,
       pendingEmail,
       isLoggedIn: !!user,

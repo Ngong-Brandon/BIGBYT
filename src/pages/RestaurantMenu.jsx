@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { C } from "../constants/Colors";
 import { getMenu } from "../services/restaurantService";
 import { useCart } from "../context/CartContext";
-import AppImage from "../components/AppImage";
 
 export default function RestaurantMenu({ restaurant, go }) {
   const { addToCart, removeFromCart, getItemInCart, cartCount, cartSubtotal } = useCart();
@@ -12,7 +11,8 @@ export default function RestaurantMenu({ restaurant, go }) {
   const [menu, setMenu]       = useState([]);   // [{ id, name, items: [] }]
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState(null);
-  const [menuCat, setMenuCat] = useState("All");
+  const [menuCat,    setMenuCat]    = useState("All");
+  const [dishSearch, setDishSearch] = useState("");
 
   // ── Load menu from Supabase ────────────────────────────────────────────────
   useEffect(() => {
@@ -32,9 +32,15 @@ export default function RestaurantMenu({ restaurant, go }) {
   }, [restaurant.id]);
 
   // ── Build flat item list filtered by selected category ─────────────────────
-  const allItems = menu.flatMap(cat => cat.items.map(item => ({ ...item, catName: cat.name })));
+  const allItems   = menu.flatMap(cat => cat.items.map(item => ({ ...item, catName: cat.name })));
   const categories = ["All", ...menu.map(c => c.name)];
-  const filtered = menuCat === "All" ? allItems : allItems.filter(i => i.catName === menuCat);
+  const filtered   = allItems.filter(item => {
+    const matchesCat    = menuCat === "All" || item.catName === menuCat;
+    const matchesSearch = !dishSearch.trim() ||
+      item.name?.toLowerCase().includes(dishSearch.toLowerCase()) ||
+      item.description?.toLowerCase().includes(dishSearch.toLowerCase());
+    return matchesCat && matchesSearch;
+  });
 
   // ── Loading skeleton ───────────────────────────────────────────────────────
   if (loading) {
@@ -83,7 +89,7 @@ export default function RestaurantMenu({ restaurant, go }) {
           <div style={{ width: 72, height: 72, background: C.card, borderRadius: 18, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 38, border: `1px solid ${C.border}`, flexShrink: 0, overflow: "hidden" }}>
             {restaurant.logo_url
               ? <img src={restaurant.logo_url} alt={restaurant.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              : <AppImage src={restaurant.image_url} fallback={restaurant.emoji || "🍽️"} width={72} height={72} borderRadius={18} />
+              : restaurant.emoji || "🍽️"
             }
           </div>
 
@@ -110,8 +116,8 @@ export default function RestaurantMenu({ restaurant, go }) {
               {[
                 ["⭐", restaurant.rating ? `${Number(restaurant.rating).toFixed(1)} (${restaurant.review_count || 0} reviews)` : "New restaurant"],
                 ["⏱", restaurant.delivery_time || "25-35 min"],
-                ["🛵", restaurant.delivery_fee != null ? `$${Number(restaurant.delivery_fee).toFixed(2)} delivery` : "Free delivery"],
-                ["📦", restaurant.min_order != null ? `$${Number(restaurant.min_order).toFixed(2)} min order` : "No minimum"],
+                ["🛵", restaurant.delivery_fee != null ? `$${Math.round(Number(restaurant.delivery_fee)).toLocaleString("fr-FR")} XAF delivery` : "Free delivery"],
+                ["📦", restaurant.min_order != null ? `$${Math.round(Number(restaurant.min_order)).toLocaleString("fr-FR")} XAF min order` : "No minimum"],
               ].map(([ic, val]) => (
                 <div key={ic} style={{ fontSize: 13, fontWeight: 600, color: C.text }}>{ic} {val}</div>
               ))}
@@ -126,6 +132,25 @@ export default function RestaurantMenu({ restaurant, go }) {
           <div style={{ fontSize: 48, marginBottom: 12 }}>🍽️</div>
           <div style={{ fontSize: 16, fontWeight: 700, color: C.text, marginBottom: 8 }}>No menu items yet</div>
           <div style={{ fontSize: 13 }}>This restaurant hasn't added their menu yet.</div>
+        </div>
+      )}
+
+      {/* Dish search bar */}
+      {menu.length > 0 && (
+        <div style={{ position: "relative", marginBottom: 20 }}>
+          <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 15, color: C.muted }}>🔍</span>
+          <input
+            value={dishSearch}
+            onChange={e => setDishSearch(e.target.value)}
+            placeholder={`Search dishes in ${restaurant.name}...`}
+            style={{ width: "100%", background: C.surface, border: `1.5px solid ${C.border}`, borderRadius: 12, padding: "12px 40px 12px 42px", color: C.text, fontFamily: "'Syne', sans-serif", fontSize: 14, outline: "none", boxSizing: "border-box" }}
+          />
+          {dishSearch && (
+            <span onClick={() => setDishSearch("")}
+              style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", cursor: "pointer", color: C.muted, fontSize: 18 }}>
+              ×
+            </span>
+          )}
         </div>
       )}
 
@@ -146,6 +171,15 @@ export default function RestaurantMenu({ restaurant, go }) {
             ))}
           </div>
 
+          {/* No search results */}
+          {dishSearch && filtered.length === 0 && (
+            <div style={{ textAlign: "center", padding: "48px 0", color: C.muted }}>
+              <div style={{ fontSize: 40, marginBottom: 10 }}>🔍</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: C.text, marginBottom: 6 }}>No dishes found</div>
+              <div style={{ fontSize: 13 }}>Try a different keyword</div>
+            </div>
+          )}
+
           {/* Menu grid */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(290px,1fr))", gap: 18 }}>
             {filtered.map(item => {
@@ -160,7 +194,7 @@ export default function RestaurantMenu({ restaurant, go }) {
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                     {item.image_url
                       ? <img src={item.image_url} alt={item.name} style={{ width: 56, height: 56, borderRadius: 12, objectFit: "cover" }} />
-                      : <span style={{ fontSize: 42 }}><AppImage src={item.image_url} fallback={item.emoji || "🍽️"} width={80} height={80} borderRadius={12} /></span>
+                      : <span style={{ fontSize: 42 }}>{item.emoji || "🍽️"}</span>
                     }
                     {item.is_popular && (
                       <span style={{ background: C.goldDim, color: C.gold, border: `1px solid ${C.gold}44`, borderRadius: 100, padding: "3px 10px", fontSize: 10, fontWeight: 700 }}>
@@ -181,7 +215,7 @@ export default function RestaurantMenu({ restaurant, go }) {
 
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "auto" }}>
                     <span style={{ color: C.accent, fontWeight: 800, fontSize: 20, fontFamily: "'DM Mono',monospace" }}>
-                      ${Number(item.price).toFixed(2)}
+                      ${Math.round(Number(item.price)).toLocaleString("fr-FR")} XAF
                     </span>
 
                     {restaurant.is_open ? (
@@ -224,7 +258,7 @@ export default function RestaurantMenu({ restaurant, go }) {
         }}>
           <span>🛒 View Cart ({cartCount})</span>
           <span style={{ background: "#fff3", borderRadius: 8, padding: "3px 12px", fontFamily: "'DM Mono',monospace" }}>
-            ${cartSubtotal.toFixed(2)}
+            ${Math.round(cartSubtotal.toFixed(2)).toLocaleString("fr-FR")} XAF
           </span>
         </div>
       )}

@@ -2,6 +2,8 @@
 // ─── Rider management and delivery tracking ───────────────────────────────────
 import { supabase } from "../lib/supabase";
 
+
+
 // ── Get rider by token (used on rider page — no auth required) ────────────────
 export async function getRiderByToken(token) {
   const { data, error } = await supabase

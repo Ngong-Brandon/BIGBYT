@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
+import { playNotificationSound, playPromoSound } from "../utils/sound";
 import {
   getUnreadCount,
   subscribeToNotifications,
@@ -23,6 +24,9 @@ export function useNotifications() {
     const channel = subscribeToNotifications(user.id, (newNotif) => {
       setUnreadCount(prev => prev + 1);
       setLatestNotif(newNotif); // triggers toast if needed
+      // if (newNotif.type === "promo") playPromoSound();
+      // else playNotificationSound();
+      playNotificationSound();
     });
 
     return () => supabase.removeChannel(channel);

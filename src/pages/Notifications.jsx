@@ -3,11 +3,13 @@ import { useState, useEffect } from "react";
 import { C } from "../constants/Colors";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
+import { playNotificationSound } from "../utils/sound";
 import {
   getNotifications,
   markAsRead,
   markAllAsRead,
 } from "../services/notificationService";
+
 
 const TYPE_STYLE = {
   order_confirmed:  { color: "#378ADD", bg: "#378ADD18" },
@@ -51,6 +53,7 @@ export default function Notifications({ go }) {
         table: "notifications", filter: `user_id=eq.${user.id}`,
       }, (payload) => {
         setNotifications(prev => [payload.new, ...prev]);
+      playNotificationSound();
       })
       .subscribe();
 
@@ -75,6 +78,15 @@ export default function Notifications({ go }) {
     if (n.action_screen) go(n.action_screen);
   }
 
+  async function handleClearAll() {
+  if (!window.confirm("Delete all notifications?")) return;
+  const { error } = await supabase
+    .from("notifications")
+    .delete()
+    .eq("user_id", user.id);
+  if (!error) setNotifications([]);
+}
+
   async function handleMarkAllRead() {
     setMarking(true);
     await markAllAsRead(user.id);
@@ -90,19 +102,33 @@ export default function Notifications({ go }) {
     <div style={{ fontFamily:"'Syne',sans-serif", color:C.text, maxWidth:600, margin:"0 auto", padding:"0 0 100px" }}>
 
       {/* Header */}
-      <div style={{ padding:"28px 20px 16px", display:"flex", alignItems:"center", justifyContent:"space-between", borderBottom:`1px solid ${C.border}` }}>
-        <div>
-          <h1 style={{ fontSize:26, fontWeight:800, letterSpacing:"-0.5px", marginBottom:2 }}>Notifications</h1>
-          {unreadCount > 0 && <div style={{ fontSize:12, color:C.muted }}><span style={{ color:C.accent, fontWeight:700 }}>{unreadCount}</span> unread</div>}
-        </div>
-        {unreadCount > 0 && (
-          <button onClick={handleMarkAllRead} disabled={marking}
-            style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:9, padding:"8px 14px", color:C.muted, fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:"'Syne',sans-serif", opacity:marking?0.6:1 }}>
-            {marking ? "Marking..." : "Mark all read"}
-          </button>
-        )}
+      {/* Header */}
+<div style={{ padding: "28px 20px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: `1px solid ${C.border}` }}>
+  <div>
+    <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.5px", marginBottom: 2 }}>Notifications</h1>
+    {unreadCount > 0 && (
+      <div style={{ fontSize: 12, color: C.muted }}>
+        <span style={{ color: C.accent, fontWeight: 700 }}>{unreadCount}</span> unread
       </div>
+    )}
+  </div>
 
+  {/* Buttons */}
+  <div style={{ display: "flex", gap: 8 }}>
+    {unreadCount > 0 && (
+      <button onClick={handleMarkAllRead} disabled={marking}
+        style={{ background: "none", border: `1px solid ${C.border}`, borderRadius: 9, padding: "8px 14px", color: C.muted, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne',sans-serif", opacity: marking ? 0.6 : 1 }}>
+        {marking ? "Marking..." : "Mark all read"}
+      </button>
+    )}
+    {notifications.length > 0 && (
+      <button onClick={handleClearAll}
+        style={{ background: "none", border: `1px solid ${C.error}44`, borderRadius: 9, padding: "8px 14px", color: C.error, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+        Clear all
+      </button>
+    )}
+  </div>
+</div>
       {/* Filter tabs */}
       <div style={{ display:"flex", gap:8, padding:"14px 20px", borderBottom:`1px solid ${C.border}` }}>
         {[["all","All"],["unread",`Unread${unreadCount>0?` (${unreadCount})`:""}`]].map(([key,label]) => (

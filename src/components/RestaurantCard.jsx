@@ -42,7 +42,7 @@ export default function RestaurantCard({ restaurant: r, onClick }) {
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: C.muted, borderTop: `1px solid ${C.border}`, paddingTop: 10 }}>
           <span>⏱ {r.delivery_time || "25–35 min"}</span>
-          <span>🛵 {r.delivery_fee != null ? `$${Number(r.delivery_fee).toFixed(2)}` : "Free"}</span>
+          <span>🛵 {r.delivery_fee != null ? `${Number(r.delivery_fee).toFixed(2)} XAF` : "Free"}</span>
           <span style={{ color: "#F5A623", fontWeight: 700 }}>⭐ {r.rating || "New"}</span>
         </div>
       </div>

@@ -166,7 +166,7 @@ borderRadius: 16, padding: "16px 18px", display: "flex", alignItems: "center", g
                 <span style={{ fontSize: 30 }}>{item.emoji}</span> 
                 <div style={{ flex: 1 }}> 
                   <div style={{ fontWeight: 700, fontSize: 14, color: C.text }}>{item.name}</div> 
-                  <div style={{ color: C.muted, fontSize: 12 }}>${item.price.toFixed(2)} each</div> 
+                  <div style={{ color: C.muted, fontSize: 12 }}>{item.price.toFixed(2)} XAF each</div> 
                 </div> 
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}> 
                   <button onClick={() => removeFromCart(item._key)} style={{ width: 28, height: 28, 
@@ -175,20 +175,19 @@ borderRadius: 7, background: C.surface, border: `1px solid ${C.border}`, color: 
                   <span style={{ fontFamily: "'DM Mono',monospace", fontWeight: 700, fontSize: 14, 
 color: C.text }}>{item.qty}</span> 
                   <button onClick={() => addToCart({ id: item.id, name: item.name, price: item.price, 
-emoji: item.emoji, cat: item.cat, desc: item.desc }, RESTAURANTS.find(r => r.id === 
-item.restaurantId))} style={{ width: 28, height: 28, borderRadius: 7, background: C.accent, 
+emoji: item.emoji, cat: item.cat, desc: item.desc }, cartRestaurant)} style={{ width: 28, height: 28, borderRadius: 7, background: C.accent, 
 border: "none", color: "#fff", cursor: "pointer", fontWeight: 800, fontSize: 15 }}>+</button> 
                 </div> 
                 <span style={{ color: C.accent, fontWeight: 800, minWidth: 58, textAlign: "right", 
-fontFamily: "'DM Mono',monospace", fontSize: 14 }}>${(item.price * item.qty).toFixed(2)}</span> 
+fontFamily: "'DM Mono',monospace", fontSize: 14 }}>{(item.price * item.qty).toFixed(2)} XAF</span> 
               </div> 
             ))} 
           </div> 
- 
+
           <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 18, 
 padding: 24, marginBottom: 18 }}> 
-            {[["Subtotal", `$${cartSubtotal.toFixed(2)}`], [`Delivery (${cartRestaurant?.name})`, 
-`$${deliveryFee.toFixed(2)}`], ["Tax (8%)", `$${tax.toFixed(2)}`]].map(([l, v]) => ( 
+            {[["Subtotal", `${cartSubtotal.toFixed(2)} XAF`], [`Delivery (${cartRestaurant?.name})`, 
+`${deliveryFee.toFixed(2)} XAF`], ["Tax (8%)", `${tax.toFixed(2)} XAF`]].map(([l, v]) => ( 
               <div key={l} style={{ display: "flex", justifyContent: "space-between", marginBottom: 12, 
 fontSize: 14, color: C.muted }}> 
                 <span>{l}</span><span style={{ color: C.text }}>{v}</span> 
@@ -198,7 +197,7 @@ fontSize: 14, color: C.muted }}>
 justifyContent: "space-between", fontWeight: 800, fontSize: 18 }}> 
               <span style={{ color: C.text }}>Total</span> 
               <span style={{ color: C.accent, fontFamily: "'DM Mono',monospace" 
-}}>${total.toFixed(2)}</span> 
+}}>${total.toFixed(2)} XAF</span> 
             </div> 
           </div> 
  
@@ -215,118 +214,115 @@ cursor: "pointer", fontFamily: "'Syne', sans-serif" }}>
  
  
 
+// src/pages/Checkout.jsx
 
-
-// src/pages/Checkout.jsx 
 
 export function Checkout({ go, showToast, setCustomerLocation }) {
   const { cartSubtotal, cartRestaurant, checkout } = useCart();
   const { user } = useAuth();
- 
-  const [savedAddresses, setSavedAddresses] = useState([]);
-  const [selectedSaved,  setSelectedSaved]  = useState(null); // selected saved address id
-  const [address,        setAddress]        = useState("");
-  const [addressData,    setAddressData]    = useState(null);
-  const [useNewAddress,  setUseNewAddress]  = useState(false);
-  const [cardNum,        setCardNum]        = useState("");
-  const [expiry,         setExpiry]         = useState("");
-  const [cvv,            setCvv]            = useState("");
-  const [placing,        setPlacing]        = useState(false);
+
+  const [savedAddresses,   setSavedAddresses]   = useState([]);
+  const [selectedSaved,    setSelectedSaved]    = useState(null);
+  const [address,          setAddress]          = useState("");
+  const [addressData,      setAddressData]      = useState(null);
+  const [useNewAddress,    setUseNewAddress]    = useState(false);
   const [loadingAddresses, setLoadingAddresses] = useState(true);
- 
-  const deliveryFee = cartRestaurant?.delivery_fee || 2.99;
-  const tax         = cartSubtotal * 0.08;
-  const total       = cartSubtotal + deliveryFee + tax;
- 
-  // ── Load saved addresses on mount ──────────────────────────────────────────
+  const [paymentMethod,    setPaymentMethod]    = useState("mtn");
+  const [mtnNumber,        setMtnNumber]        = useState("");
+  const [placing,          setPlacing]          = useState(false);
+
+  const deliveryFee = Math.round(cartRestaurant?.delivery_fee || 1500);
+  const tax         = Math.round(cartSubtotal * 0.1925);
+  const total       = Math.round(cartSubtotal + deliveryFee + tax);
+
+  const fmt = (n) => `${Math.round(n).toLocaleString("fr-FR")} XAF`;
+
+  // ── Load saved addresses ───────────────────────────────────────────────────
   useEffect(() => {
     if (!user?.id) { setLoadingAddresses(false); return; }
     getAddresses(user.id).then(({ addresses }) => {
       const list = addresses || [];
       setSavedAddresses(list);
- 
-      // Auto-select default address if exists
       const def = list.find(a => a.is_default) || list[0];
       if (def) {
         setSelectedSaved(def.id);
         setAddress(`${def.address}, ${def.city}`);
       } else {
-        // No saved addresses — go straight to new address input
         setUseNewAddress(true);
       }
       setLoadingAddresses(false);
     });
   }, [user?.id]);
- 
-  // ── When user picks a saved address ────────────────────────────────────────
+
   function handleSelectSaved(addr) {
     setSelectedSaved(addr.id);
     setAddress(`${addr.address}, ${addr.city}`);
-    setAddressData(null); // no lat/lng for saved addresses unless stored
+    setAddressData(null);
     setUseNewAddress(false);
   }
- 
-  // ── When user switches to typing a new address ──────────────────────────────
+
   function handleUseNew() {
     setSelectedSaved(null);
     setAddress("");
     setAddressData(null);
     setUseNewAddress(true);
   }
- 
+
   async function placeOrder() {
-    if (!address.trim())     return showToast("Select or enter a delivery address", "error");
-    if (cardNum.length < 12) return showToast("Enter a valid card number", "error");
-    if (!expiry || !cvv)     return showToast("Fill in payment details", "error");
- 
+    if (!address.trim())
+      return showToast("Select or enter a delivery address", "error");
+    if (!addressData && !selectedSaved)
+      return showToast("Please select an address from the dropdown suggestions", "error");
+    if (paymentMethod === "mtn" && mtnNumber.length < 9)
+      return showToast("Enter a valid MTN MoMo number", "error");
+
     setPlacing(true);
- 
+
     if (addressData && setCustomerLocation) {
       setCustomerLocation({ lat: addressData.lat, lng: addressData.lng, address });
     }
- 
+
     const { order, error } = await checkout({
       deliveryAddress: address,
-      paymentRef: null,
+      paymentRef:      null,
     });
- 
+
     setPlacing(false);
- 
     if (error) return showToast(error.message || "Order failed", "error");
     go("tracking");
   }
- 
+
   const inp = (extra = {}) => ({
     width: "100%", background: C.card, border: `1.5px solid ${C.border}`,
-    borderRadius: 10, padding: "14px 16px", color: C.text,
+    borderRadius: 10, padding: "13px 16px", color: C.text,
     fontFamily: "'Syne', sans-serif", fontSize: 15, outline: "none", ...extra,
   });
- 
+
   const lbl = {
     display: "block", fontSize: 11, color: C.muted, fontWeight: 700,
     marginBottom: 10, letterSpacing: 1, fontFamily: "'DM Mono', monospace",
   };
- 
+
   const iconForLabel = (label) => {
     const l = label?.toLowerCase();
     if (l === "home") return "🏠";
     if (l === "work") return "🏢";
     return "📍";
   };
- 
+
   return (
     <div style={{ maxWidth: 560, margin: "0 auto", padding: "36px 20px 100px", fontFamily: "'Syne', sans-serif", color: C.text }}>
-      <h1 style={{ fontSize: 36, fontWeight: 800, letterSpacing: "-0.8px", marginBottom: 32 }}>Checkout</h1>
- 
-      {/* ── Delivery Address ─────────────────────────────────────────────── */}
-      <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 20, padding: 24, marginBottom: 18 }}>
+      <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}`}</style>
+      <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.8px", marginBottom: 28 }}>Checkout</h1>
+
+      {/* ── 1. Delivery Address ──────────────────────────────────────────── */}
+      <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 20, padding: 24, marginBottom: 16 }}>
         <label style={lbl}>📍 DELIVERY ADDRESS</label>
- 
+
         {loadingAddresses ? (
           <div style={{ height: 52, background: C.card, borderRadius: 10, animation: "pulse 1.5s infinite" }} />
         ) : (
           <>
-            {/* Saved addresses list */}
             {savedAddresses.length > 0 && !useNewAddress && (
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 14 }}>
                 {savedAddresses.map(addr => {
@@ -334,22 +330,14 @@ export function Checkout({ go, showToast, setCustomerLocation }) {
                   return (
                     <div key={addr.id} onClick={() => handleSelectSaved(addr)}
                       style={{ display: "flex", alignItems: "center", gap: 12, padding: "13px 16px", background: isSelected ? `${C.accent}18` : C.card, border: `1.5px solid ${isSelected ? C.accent : C.border}`, borderRadius: 12, cursor: "pointer", transition: "all 0.15s" }}>
- 
-                      {/* Radio dot */}
-                      <div style={{ width: 18, height: 18, borderRadius: "50%", border: `2px solid ${isSelected ? C.accent : C.border}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all 0.15s" }}>
+                      <div style={{ width: 18, height: 18, borderRadius: "50%", border: `2px solid ${isSelected ? C.accent : C.border}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                         {isSelected && <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.accent }} />}
                       </div>
- 
-                      {/* Icon */}
                       <span style={{ fontSize: 20, flexShrink: 0 }}>{iconForLabel(addr.label)}</span>
- 
-                      {/* Details */}
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                           <span style={{ fontWeight: 700, fontSize: 14, color: isSelected ? C.accent : C.text }}>{addr.label}</span>
-                          {addr.is_default && (
-                            <span style={{ fontSize: 9, fontWeight: 800, background: `${C.accent}22`, color: C.accent, borderRadius: 5, padding: "2px 6px" }}>DEFAULT</span>
-                          )}
+                          {addr.is_default && <span style={{ fontSize: 9, fontWeight: 800, background: `${C.accent}22`, color: C.accent, borderRadius: 5, padding: "2px 6px" }}>DEFAULT</span>}
                         </div>
                         <div style={{ fontSize: 12, color: C.muted, marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                           {addr.address}, {addr.city}
@@ -358,31 +346,34 @@ export function Checkout({ go, showToast, setCustomerLocation }) {
                     </div>
                   );
                 })}
- 
-                {/* Use a different address button */}
                 <button onClick={handleUseNew}
-                  style={{ background: "none", border: `1.5px dashed ${C.border}`, borderRadius: 12, padding: "11px 16px", color: C.muted, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne', sans-serif", textAlign: "left", transition: "all 0.15s" }}
+                  style={{ background: "none", border: `1.5px dashed ${C.border}`, borderRadius: 12, padding: "11px 16px", color: C.muted, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne', sans-serif", textAlign: "left" }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = C.accent; e.currentTarget.style.color = C.accent; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.muted; }}>
                   + Use a different address
                 </button>
               </div>
             )}
- 
-            {/* New address input — shown when no saved addresses or user clicked "different address" */}
+
             {(useNewAddress || savedAddresses.length === 0) && (
               <div>
                 <AddressInput
                   value={address}
                   onChange={setAddress}
-                  onSelect={(data) => {
-                    setAddress(data.address);
-                    setAddressData(data);
-                  }}
-                  placeholder="Start typing your address..."
+                  onSelect={(data) => { setAddress(data.address); setAddressData(data); }}
+                  placeholder="Start typing your address in Buea..."
                 />
- 
-                {/* Back to saved addresses */}
+                {address && !addressData && (
+                  <div style={{ fontSize: 12, color: C.warning, marginTop: 6 }}>
+                    ⚠️ Please select an address from the dropdown
+                  </div>
+                )}
+                {addressData && (
+                  <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 6 }}>
+                    <span style={{ fontSize: 12, color: C.success }}>✓ Location confirmed</span>
+                    <span style={{ fontSize: 12, color: C.muted }}>— {addressData.neighborhood || addressData.city}</span>
+                  </div>
+                )}
                 {savedAddresses.length > 0 && (
                   <button onClick={() => {
                     setUseNewAddress(false);
@@ -393,20 +384,11 @@ export function Checkout({ go, showToast, setCustomerLocation }) {
                     ← Use a saved address
                   </button>
                 )}
- 
-                {/* Confirmation */}
-                {addressData && (
-                  <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 6 }}>
-                    <span style={{ fontSize: 12, color: C.success }}>✓ Location confirmed</span>
-                    <span style={{ fontSize: 12, color: C.muted }}>— {addressData.neighborhood || addressData.city}</span>
-                  </div>
-                )}
               </div>
             )}
- 
-            {/* Selected address confirmation */}
+
             {!useNewAddress && selectedSaved && address && (
-              <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 6 }}>
                 <span style={{ fontSize: 12, color: C.success }}>✓ Delivering to:</span>
                 <span style={{ fontSize: 12, color: C.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{address}</span>
               </div>
@@ -414,54 +396,98 @@ export function Checkout({ go, showToast, setCustomerLocation }) {
           </>
         )}
       </div>
- 
-      {/* ── Payment ──────────────────────────────────────────────────────── */}
-      <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 20, padding: 24, marginBottom: 24 }}>
-        <label style={lbl}>💳 PAYMENT DETAILS</label>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <input value={cardNum} onChange={e => setCardNum(e.target.value.replace(/\D/g, "").slice(0, 16))}
-            placeholder="Card Number" style={{ ...inp(), fontFamily: "'DM Mono', monospace", letterSpacing: 3 }} />
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-            <input value={expiry} onChange={e => setExpiry(e.target.value)} placeholder="MM / YY" style={{ ...inp(), fontFamily: "'DM Mono', monospace" }} />
-            <input value={cvv}    onChange={e => setCvv(e.target.value.slice(0, 4))} placeholder="CVV" style={{ ...inp(), fontFamily: "'DM Mono', monospace" }} />
+
+      {/* ── 2. Payment Method ────────────────────────────────────────────── */}
+      <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 20, padding: 24, marginBottom: 16 }}>
+        <label style={lbl}>💳 PAYMENT METHOD</label>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: paymentMethod === "mtn" ? 16 : 0 }}>
+
+          {/* MTN Mobile Money — ACTIVE */}
+          <div onClick={() => setPaymentMethod("mtn")}
+            style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", background: paymentMethod === "mtn" ? `${C.accent}18` : C.card, border: `1.5px solid ${paymentMethod === "mtn" ? C.accent : C.border}`, borderRadius: 12, cursor: "pointer", transition: "all 0.15s" }}>
+            <div style={{ width: 18, height: 18, borderRadius: "50%", border: `2px solid ${paymentMethod === "mtn" ? C.accent : C.border}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              {paymentMethod === "mtn" && <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.accent }} />}
+            </div>
+            <div style={{ width: 38, height: 38, borderRadius: 9, background: "#FFCC00", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>📱</div>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 14, color: C.text }}>MTN Mobile Money</div>
+              <div style={{ fontSize: 12, color: C.muted }}>Pay with MTN MoMo</div>
+            </div>
+          </div>
+
+          {/* Orange Money — COMING SOON */}
+          <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", background: C.card, border: `1.5px solid ${C.border}`, borderRadius: 12, opacity: 0.45, cursor: "not-allowed" }}>
+            <div style={{ width: 18, height: 18, borderRadius: "50%", border: `2px solid ${C.border}`, flexShrink: 0 }} />
+            <div style={{ width: 38, height: 38, borderRadius: 9, background: "#FF6600", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>📱</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 700, fontSize: 14, color: C.text }}>Orange Money</div>
+              <div style={{ fontSize: 12, color: C.muted }}>Pay with Orange Money</div>
+            </div>
+            <span style={{ fontSize: 10, fontWeight: 800, background: "#1A1A1A", color: C.muted, borderRadius: 6, padding: "3px 8px", flexShrink: 0 }}>COMING SOON</span>
+          </div>
+
+          {/* Card — COMING SOON */}
+          <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", background: C.card, border: `1.5px solid ${C.border}`, borderRadius: 12, opacity: 0.45, cursor: "not-allowed" }}>
+            <div style={{ width: 18, height: 18, borderRadius: "50%", border: `2px solid ${C.border}`, flexShrink: 0 }} />
+            <div style={{ width: 38, height: 38, borderRadius: 9, background: "#1A2A4A", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>💳</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 700, fontSize: 14, color: C.text }}>Card Payment</div>
+              <div style={{ fontSize: 12, color: C.muted }}>Visa, Mastercard</div>
+            </div>
+            <span style={{ fontSize: 10, fontWeight: 800, background: "#1A1A1A", color: C.muted, borderRadius: 6, padding: "3px 8px", flexShrink: 0 }}>COMING SOON</span>
           </div>
         </div>
+
+        {/* MTN number input */}
+        {paymentMethod === "mtn" && (
+          <div>
+            <label style={lbl}>MTN MOBILE NUMBER</label>
+            <input
+              value={mtnNumber}
+              onChange={e => setMtnNumber(e.target.value.replace(/\D/g, "").slice(0, 12))}
+              placeholder="e.g. 677000000"
+              style={{ ...inp(), fontFamily: "'DM Mono', monospace", letterSpacing: 2 }}
+            />
+            <div style={{ fontSize: 11, color: C.muted, marginTop: 6 }}>
+              You will receive a payment prompt on this number
+            </div>
+          </div>
+        )}
       </div>
- 
-      {/* ── Order Summary ─────────────────────────────────────────────────── */}
-      <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 18, padding: 24, marginBottom: 18 }}>
+
+      {/* ── 3. Order Summary ─────────────────────────────────────────────── */}
+      <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 18, padding: 24, marginBottom: 20 }}>
+        <label style={{ ...lbl, marginBottom: 14 }}>🧾 ORDER SUMMARY</label>
         {[
-          ["Subtotal",                              `$${cartSubtotal.toFixed(2)}`],
-          [`Delivery (${cartRestaurant?.name||""})`, `$${deliveryFee.toFixed(2)}`],
-          ["Tax (8%)",                              `$${tax.toFixed(2)}`],
+          ["Subtotal",                               fmt(cartSubtotal)],
+          [`Delivery — ${cartRestaurant?.name || ""}`, fmt(deliveryFee)],
+          ["VAT (19.25%)",                           fmt(tax)],
         ].map(([l, v]) => (
-          <div key={l} style={{ display: "flex", justifyContent: "space-between", marginBottom: 12, fontSize: 14, color: C.muted }}>
+          <div key={l} style={{ display: "flex", justifyContent: "space-between", marginBottom: 10, fontSize: 14, color: C.muted }}>
             <span>{l}</span><span style={{ color: C.text }}>{v}</span>
           </div>
         ))}
-        <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 16, display: "flex", justifyContent: "space-between", fontWeight: 800, fontSize: 18 }}>
+        <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 14, display: "flex", justifyContent: "space-between", fontWeight: 800, fontSize: 18 }}>
           <span>Total</span>
-          <span style={{ color: C.accent, fontFamily: "'DM Mono', monospace" }}>${total.toFixed(2)}</span>
+          <span style={{ color: C.accent, fontFamily: "'DM Mono', monospace" }}>{fmt(total)}</span>
         </div>
       </div>
- 
-      <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}`}</style>
- 
+
       <button onClick={placeOrder} disabled={placing}
-        style={{ width: "100%", background: C.accent, color: "#fff", border: "none", padding: 15, borderRadius: 12, fontSize: 16, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne', sans-serif", opacity: placing ? 0.7 : 1 }}>
+        style={{ width: "100%", background: C.accent, color: "#fff", border: "none", padding: 16, borderRadius: 12, fontSize: 16, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne', sans-serif", opacity: placing ? 0.7 : 1 }}>
         {placing ? "Placing Order..." : "🔥 Place Order"}
       </button>
     </div>
   );
 }
-
  
 
 
 // src/pages/Tracking.jsx
 // ─── Order tracking with live map + real-time rider location ──────────────────
 
-
+import { playNotificationSound, playSuccessSound } from "../utils/sound";
 
 const STAGES = [
   { key: "confirmed",  label: "Order Confirmed", sub: "We've received your order" },
@@ -506,6 +532,8 @@ export function Tracking({ go, orderId, customerLocation }) {
       if (updatedOrder.rider_lat && updatedOrder.rider_lng) {
         setRiderLocation({ lat: updatedOrder.rider_lat, lng: updatedOrder.rider_lng });
       }
+      if (updatedOrder.status === "delivered") playSuccessSound();
+      else if (updatedOrder.status === "on_the_way") playNotificationSound();
     });
 
     return () => supabase.removeChannel(channel);

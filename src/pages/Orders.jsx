@@ -2,8 +2,7 @@
 import { useState, useEffect } from "react";
 import { C } from "../constants/Colors";
 import { useAuth } from "../context/AuthContext";
-import { getOrderHistory } from "../services/orderService";
-import { supabase } from "../lib/supabase";
+import { getOrderHistory, submitReview } from "../services/orderService";
 import AppImage from "../components/AppImage";
 
 const STATUS = {
@@ -26,7 +25,7 @@ function timeAgo(dateStr) {
   return new Date(dateStr).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }
 
-function fmtPrice(n) { return `$${Number(n || 0).toFixed(2)}`; }
+function fmtPrice(n) { return `${Number(n || 0).toFixed(2)} XAF`; }
 
 // ─── Star Rating Component ─────────────────────────────────────────────────────
 function StarRating({ value, onChange, readonly = false }) {
@@ -88,6 +87,7 @@ function OrderCard({ order, onClick }) {
           <span style={{ fontSize: 11, color: C.muted }}>{order.items?.length || 0} item{order.items?.length !== 1 ? "s" : ""}</span>
           <span style={{ fontSize: 11, color: C.muted }}> · </span>
           <span style={{ fontSize: 15, fontWeight: 800, color: C.accent, fontFamily: "'DM Mono',monospace" }}>{fmtPrice(order.total)}</span>
+          
         </div>
         {order.status === "on_the_way" && (
           <div style={{ background: C.accent, borderRadius: 8, padding: "6px 12px", fontSize: 12, fontWeight: 800, color: "#fff" }}>Track →</div>
@@ -123,28 +123,30 @@ function OrderDetail({ order, onBack, go, onRated }) {
 
   async function submitRating() {
     if (!rating) return showToast("Please select a star rating", "error");
+    if (!order.restaurant_id) return showToast("Cannot identify restaurant. Please go back and try again.", "error");
+
     setSubmitting(true);
 
-    // Insert review into reviews table
-    const { error: reviewError } = await supabase
-      .from("reviews")
-      .upsert({
-        order_id:      order.id,
-        user_id:       user.id,
-        restaurant_id: order.restaurant_id,
-        rating,
-        comment: comment.trim() || null,
-      }, { onConflict: "order_id" });
-
-    if (reviewError) {
-      setSubmitting(false);
-      return showToast(reviewError.message || "Failed to submit review", "error");
-    }
-
-    // Update restaurant's average rating
-    await supabase.rpc("update_restaurant_rating", { p_restaurant_id: order.restaurant_id });
+    const { error } = await submitReview({
+      userId:       user.id,
+      restaurantId: order.restaurant_id,
+      orderId:      order.id,
+      rating,
+      comment:      comment.trim() || null,
+    });
 
     setSubmitting(false);
+
+    if (error) {
+      // If duplicate review just mark as submitted
+      if (error.code === "23505") {
+        setSubmitted(true);
+        showToast("You already reviewed this order ✓");
+        return;
+      }
+      return showToast(error.message || "Failed to submit review", "error");
+    }
+
     setSubmitted(true);
     showToast("Review submitted! Thank you 🔥", "success");
     if (onRated) onRated(order.id, rating);

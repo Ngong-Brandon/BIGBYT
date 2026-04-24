@@ -44,9 +44,9 @@ export async function getAllOrders({ status, limit = 50 } = {}) {
   let query = supabase
     .from("orders")
     .select(`
-      id, total, status, placed_at, delivery_address,
+      id, total, status, placed_at, delivery_address, restaurant_id,
       user:profiles(full_name),
-      restaurant:restaurants(name, emoji),
+      restaurant:restaurants(id, name, emoji),
       items:order_items(name, qty, price)
     `)
     .order("placed_at", { ascending: false })
@@ -127,8 +127,6 @@ export async function createMenuItem(payload) {
     .insert(payload)
     .select()
     .single();
-    
-    
   return { item: data, error };
 }
 

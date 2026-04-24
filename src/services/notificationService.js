@@ -1,6 +1,9 @@
 // src/services/notificationService.js
 import { supabase } from "../lib/supabase";
 
+
+
+
 // ── Fetch all notifications for current user ──────────────────────────────────
 export async function getNotifications(userId) {
   const { data, error } = await supabase
@@ -69,6 +72,7 @@ export async function sendCampaign(campaignId) {
     .select("*")
     .eq("id", campaignId)
     .single();
+
 
   if (!campaign) return { error: { message: "Campaign not found" } };
 

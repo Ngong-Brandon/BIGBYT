@@ -40,7 +40,7 @@ function ActBtn({ label, onClick, danger, success, disabled }) {
   const color = danger ? A.error : success ? A.success : A.muted;
   return (
     <button onClick={onClick} disabled={disabled}
-      style={{ background: "none", border: `1px solid ${color}33`, borderRadius: 7, padding: "4px 10px", fontSize: 11, fontWeight: 700, cursor: disabled ? "not-allowed" : "pointer", color: disabled ? "#444" : color, fontFamily: "'Syne', sans-serif", transition: "all 0.15s" }}
+      style={{ background: "none", border: `1px solid ${color}33`, borderRadius: 7, padding: "4px 10px", fontSize: 11, fontWeight: 700, cursor: disabled ? "not-allowed" : "pointer", color: disabled ? "#444" : color, fontFamily: " sans-serif", transition: "all 0.15s" }}
       onMouseEnter={e => { if (!disabled) { e.currentTarget.style.borderColor = color; e.currentTarget.style.background = `${color}11`; }}}
       onMouseLeave={e => { e.currentTarget.style.borderColor = `${color}33`; e.currentTarget.style.background = "none"; }}>
       {label}
@@ -77,7 +77,7 @@ function Tr({ children }) {
 }
 
 function Td({ children, mono, muted, accent, nowrap }) {
-  return <td style={{ padding: "11px 14px", fontSize: 13, borderBottom: `1px solid #0D0D0D`, color: accent ? A.accent : muted ? A.muted : A.text, fontFamily: mono ? "'DM Mono', monospace" : "'Syne', sans-serif", fontWeight: accent ? 800 : 400, whiteSpace: nowrap ? "nowrap" : "normal" }}>{children}</td>;
+  return <td style={{ padding: "11px 14px", fontSize: 13, borderBottom: `1px solid #0D0D0D`, color: accent ? A.accent : muted ? A.muted : A.text, fontFamily: mono ? "'DM Mono', monospace" : " sans-serif", fontWeight: accent ? 800 : 400, whiteSpace: nowrap ? "nowrap" : "normal" }}>{children}</td>;
 }
 
 function Inp({ label, value, onChange, placeholder, type = "text", style = {} }) {
@@ -85,7 +85,7 @@ function Inp({ label, value, onChange, placeholder, type = "text", style = {} })
     <div>
       {label && <div style={{ fontSize: 11, color: A.muted, marginBottom: 5, fontWeight: 700, letterSpacing: 0.5 }}>{label}</div>}
       <input value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} type={type}
-        style={{ background: A.card, border: `1px solid ${A.border}`, borderRadius: 9, padding: "9px 13px", color: A.text, fontFamily: "'Syne', sans-serif", fontSize: 13, outline: "none", width: "100%", ...style }} />
+        style={{ background: A.card, border: `1px solid ${A.border}`, borderRadius: 9, padding: "9px 13px", color: A.text, fontFamily: " sans-serif", fontSize: 13, outline: "none", width: "100%", ...style }} />
     </div>
   );
 }
@@ -93,7 +93,7 @@ function Inp({ label, value, onChange, placeholder, type = "text", style = {} })
 function BtnPrimary({ label, onClick, loading, style = {} }) {
   return (
     <button onClick={onClick} disabled={loading}
-      style={{ background: A.accent, color: "#fff", border: "none", borderRadius: 10, padding: "9px 18px", fontSize: 13, fontWeight: 800, cursor: loading ? "not-allowed" : "pointer", fontFamily: "'Syne', sans-serif", opacity: loading ? 0.7 : 1, ...style }}>
+      style={{ background: A.accent, color: "#fff", border: "none", borderRadius: 10, padding: "9px 18px", fontSize: 13, fontWeight: 800, cursor: loading ? "not-allowed" : "pointer", fontFamily: " sans-serif", opacity: loading ? 0.7 : 1, ...style }}>
       {loading ? "Saving..." : label}
     </button>
   );
@@ -102,7 +102,7 @@ function BtnPrimary({ label, onClick, loading, style = {} }) {
 function BtnGhost({ label, onClick }) {
   return (
     <button onClick={onClick}
-      style={{ background: "none", border: `1px solid ${A.border}`, borderRadius: 10, padding: "9px 18px", color: A.muted, fontSize: 13, cursor: "pointer", fontFamily: "'Syne', sans-serif" }}>
+      style={{ background: "none", border: `1px solid ${A.border}`, borderRadius: 10, padding: "9px 18px", color: A.muted, fontSize: 13, cursor: "pointer", fontFamily: " sans-serif" }}>
       {label}
     </button>
   );
@@ -145,7 +145,7 @@ function Confirm({ message, onConfirm, onCancel, danger }) {
         <div style={{ fontSize: 15, fontWeight: 700, color: A.text, marginBottom: 8 }}>{message}</div>
         <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 20 }}>
           <BtnGhost label="Cancel" onClick={onCancel} />
-          <button onClick={onConfirm} style={{ background: danger ? A.error : A.accent, color: "#fff", border: "none", borderRadius: 10, padding: "9px 20px", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne', sans-serif" }}>
+          <button onClick={onConfirm} style={{ background: danger ? A.error : A.accent, color: "#fff", border: "none", borderRadius: 10, padding: "9px 20px", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: " sans-serif" }}>
             Confirm
           </button>
         </div>
@@ -181,7 +181,7 @@ function Dashboard({ onNav }) {
       <SectionTitle title="Dashboard" sub="Overview of today's activity" />
       <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
         <StatCard label="Today's Orders"  value={stats?.todayOrders  ?? "—"} change="vs yesterday" changeType="up" />
-        <StatCard label="Today's Revenue" value={stats ? `$${stats.todayRevenue}` : "—"} change="vs yesterday" changeType="up" />
+        <StatCard label="Today's Revenue" value={stats ? `${Math.round(Number(stats.todayRevenue)).toLocaleString("fr-FR")} XAF` : "—"} change="vs yesterday" changeType="up" />
         <StatCard label="Total Users"     value={stats?.totalUsers   ?? "—"} change="platform total" changeType="none" />
         <StatCard label="Avg Delivery"    value="24 min" change="3 min faster" changeType="up" />
       </div>
@@ -199,7 +199,7 @@ function Dashboard({ onNav }) {
                 <Td mono muted>#{o.id.slice(0, 8).toUpperCase()}</Td>
                 <Td>{o.user?.full_name || "Unknown"}</Td>
                 <Td>{o.restaurant?.emoji} {o.restaurant?.name}</Td>
-                <Td accent>${Number(o.total).toFixed(2)}</Td>
+                <Td accent>${Math.round(Number(o.total)).toLocaleString("fr-FR")} XAF</Td>
                 <Td><Badge label={s.label} color={s.color} bg={s.bg} /></Td>
                 <Td><ActBtn label="View" onClick={() => onNav("orders")} /></Td>
               </Tr>
@@ -213,10 +213,16 @@ function Dashboard({ onNav }) {
 
 function AdminOrders() {
   const { show, Toast } = useToast();
-  const [orders, setOrders]   = useState([]);
-  const [filter, setFilter]   = useState("all");
-  const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState(null);
+  const [orders,       setOrders]       = useState([]);
+  const [filter,       setFilter]       = useState("all");
+  const [loading,      setLoading]      = useState(true);
+  const [selected,     setSelected]     = useState(null);
+  const [restaurants,  setRestaurants]  = useState([]);
+  const [restFilter,   setRestFilter]   = useState(""); // restaurant id filter
+
+  useEffect(() => {
+    getAdminRestaurants().then(({ restaurants }) => setRestaurants(restaurants));
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -237,27 +243,45 @@ function AdminOrders() {
     <div>
       {Toast}
       <SectionTitle title="Orders" sub="Manage and advance order status" />
-      <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
         {FILTERS.map(f => (
           <button key={f} onClick={() => setFilter(f)}
-            style={{ background: filter === f ? `${A.accent}18` : "transparent", border: `1px solid ${filter === f ? A.accent : A.border}`, borderRadius: 100, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: filter === f ? A.accent : A.muted, cursor: "pointer", fontFamily: "'Syne', sans-serif", transition: "all 0.15s", whiteSpace: "nowrap" }}>
+            style={{ background: filter === f ? `${A.accent}18` : "transparent", border: `1px solid ${filter === f ? A.accent : A.border}`, borderRadius: 100, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: filter === f ? A.accent : A.muted, cursor: "pointer", fontFamily: " sans-serif", transition: "all 0.15s", whiteSpace: "nowrap" }}>
             {f === "all" ? "All" : f.replace("_", " ")}
           </button>
         ))}
+      </div>
+
+      {/* Restaurant filter */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+        <span style={{ fontSize: 12, color: A.muted, fontWeight: 700, whiteSpace: "nowrap" }}>Filter by restaurant:</span>
+        <select value={restFilter} onChange={e => setRestFilter(e.target.value)}
+          style={{ background: A.card, border: `1px solid ${restFilter ? A.accent : A.border}`, borderRadius: 9, padding: "7px 13px", color: restFilter ? A.accent : A.text, fontFamily: "sans-serif", fontSize: 13, outline: "none", flex: 1, maxWidth: 280, fontWeight: restFilter ? 700 : 400 }}>
+          <option value="">All Restaurants</option>
+          {restaurants.map(r => (
+            <option key={r.id} value={r.id}>{r.emoji} {r.name}</option>
+          ))}
+        </select>
+        {restFilter && (
+          <button onClick={() => setRestFilter("")}
+            style={{ background: "none", border: `1px solid ${A.border}`, borderRadius: 8, padding: "6px 12px", fontSize: 11, fontWeight: 700, color: A.muted, cursor: "pointer", fontFamily: "sans-serif", whiteSpace: "nowrap" }}>
+            Clear ×
+          </button>
+        )}
       </div>
       {loading ? (
         <div style={{ textAlign: "center", padding: "40px 0", color: A.muted }}>Loading orders...</div>
       ) : (
         <Table headers={["ORDER", "CUSTOMER", "RESTAURANT", "TOTAL", "STATUS", "PLACED", "ACTIONS"]}
-          empty={orders.length === 0 ? "No orders found" : null}>
-          {orders.map(o => {
+          empty={(restFilter ? orders.filter(o => o.restaurant_id === restFilter) : orders).length === 0 ? (restFilter ? "No orders for this restaurant" : "No orders found") : null}>
+          {(restFilter ? orders.filter(o => o.restaurant_id === restFilter) : orders).map(o => {
             const s = ORDER_STATUS[o.status] || ORDER_STATUS.pending;
             return (
               <Tr key={o.id}>
                 <Td mono muted>#{o.id.slice(0, 8).toUpperCase()}</Td>
                 <Td>{o.user?.full_name || "Unknown"}</Td>
                 <Td>{o.restaurant?.emoji} {o.restaurant?.name}</Td>
-                <Td accent>${Number(o.total).toFixed(2)}</Td>
+                <Td accent>${Math.round(Number(o.total)).toLocaleString("fr-FR")} XAF</Td>
                 <Td><Badge label={s.label} color={s.color} bg={s.bg} /></Td>
                 <Td muted nowrap>{new Date(o.placed_at).toLocaleString()}</Td>
                 <Td>
@@ -298,13 +322,13 @@ function AdminOrders() {
               {selected.items?.map((item, i) => (
                 <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: `1px solid ${A.border}`, fontSize: 13 }}>
                   <span>{item.qty}× {item.name}</span>
-                  <span style={{ color: A.accent, fontWeight: 700 }}>${(item.price * item.qty).toFixed(2)}</span>
+                  <span style={{ color: A.accent, fontWeight: 700 }}>${Math.round((item.price * item.qty).toFixed(2)).toLocaleString("fr-FR")} XAF</span>
                 </div>
               ))}
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", paddingTop: 8, fontWeight: 800, fontSize: 16 }}>
               <span>Total</span>
-              <span style={{ color: A.accent }}>${Number(selected.total).toFixed(2)}</span>
+              <span style={{ color: A.accent }}>${Math.round(Number(selected.total)).toLocaleString("fr-FR")} XAF</span>
             </div>
             <div style={{ display: "flex", gap: 8, paddingTop: 4 }}>
               {selected.status === "confirmed"  && <BtnPrimary label="→ Mark Preparing"  onClick={() => changeStatus(selected.id, "preparing")} />}
@@ -312,7 +336,7 @@ function AdminOrders() {
               {selected.status === "on_the_way" && <BtnPrimary label="→ Mark Delivered"  onClick={() => changeStatus(selected.id, "delivered")} />}
               {["pending","confirmed","preparing"].includes(selected.status) && (
                 <button onClick={() => changeStatus(selected.id, "cancelled")}
-                  style={{ background: `${A.error}18`, color: A.error, border: `1px solid ${A.error}44`, borderRadius: 10, padding: "9px 16px", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne', sans-serif" }}>
+                  style={{ background: `${A.error}18`, color: A.error, border: `1px solid ${A.error}44`, borderRadius: 10, padding: "9px 16px", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: " sans-serif" }}>
                   Cancel Order
                 </button>
               )}
@@ -331,7 +355,7 @@ function AdminRestaurants() {
   const [confirm, setConfirm] = useState(null);
   const [saving, setSaving] = useState(false);
 
-  const EMPTY_FORM = { name: "", cuisine_tags: "", neighborhood: "", city: "Lagos", emoji: "🍽️", image_url: "", delivery_time: "25–35 min", delivery_fee: "2.99", min_order: "8.00", description: "" };
+  const EMPTY_FORM = { name: "", cuisine_tags: "", neighborhood: "", city: "Buea", emoji: "🍽️", image_url: "", delivery_time: "25–35 min", delivery_fee: "1500", min_order: "3000", description: "" };
   const [form, setForm] = useState(EMPTY_FORM);
 
   useEffect(() => { getAdminRestaurants().then(({ restaurants }) => setRestaurants(restaurants)); }, []);
@@ -345,7 +369,7 @@ function AdminRestaurants() {
   async function handleSave() {
     if (!form.name || !form.neighborhood || !form.city) return show("Name, neighborhood and city are required", "error");
     setSaving(true);
-    const payload = { ...form, cuisine_tags: form.cuisine_tags.split(",").map(s => s.trim()).filter(Boolean), delivery_fee: parseFloat(form.delivery_fee) || 2.99, min_order: parseFloat(form.min_order) || 8 };
+    const payload = { ...form, cuisine_tags: form.cuisine_tags.split(",").map(s => s.trim()).filter(Boolean), delivery_fee: parseFloat(form.delivery_fee) || 1500, min_order: parseFloat(form.min_order) || 2000 };
 
     if (modal === "add") {
       const { restaurant, error } = await createRestaurant(payload);
@@ -371,12 +395,12 @@ function AdminRestaurants() {
     ["Name",          "name",          "Flames & Smoke"],
     ["Description",   "description",   "The best BBQ in the city"],
     ["Cuisine Tags",  "cuisine_tags",  "BBQ, Burgers (comma separated)"],
-    ["Neighborhood",  "neighborhood",  "Lekki Phase 1"],
-    ["City",          "city",          "Lagos"],
+    ["Neighborhood",  "neighborhood",  "Buea Town"],
+    ["City",          "city",          "Buea"],
     ["Emoji",         "emoji",         "🔥"],
     ["Delivery Time", "delivery_time", "18–25 min"],
     ["Delivery Fee",  "delivery_fee",  "1.99"],
-    ["Min Order",     "min_order",     "8.00"],
+    ["Min Order",     "min_order",     "3000"],
   ];
 
   return (
@@ -458,8 +482,17 @@ function AdminMenuItems() {
   async function handleSave() {
     if (!form.name || !form.price || !form.restaurant_id) return show("Name, price and restaurant are required", "error");
     setSaving(true);
-    const payload = { ...form, price: parseFloat(form.price) };
-
+    const payload = {
+  name:          form.name.trim(),
+  description:   form.description?.trim() || null,
+  price:         parseFloat(form.price),
+  emoji:         form.emoji         || null,
+  image_url:     form.image_url     || null,
+  restaurant_id: form.restaurant_id || null,
+  category_id:   form.category_id   || null,
+  is_popular:    Boolean(form.is_popular),
+  is_available:  form.is_available  ?? true,
+};
     if (modal === "add") {
       const { item, error } = await createMenuItem(payload);
       if (error) { show(error.message, "error"); } else { setItems(prev => [...prev, item]); show("Item added ✓"); }
@@ -489,7 +522,7 @@ function AdminMenuItems() {
       <SectionTitle title="Menu Items" sub="Manage food items across all restaurants" />
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
         <select value={rFilter} onChange={e => setRFilter(e.target.value)}
-          style={{ background: A.card, border: `1px solid ${A.border}`, borderRadius: 9, padding: "8px 13px", color: A.text, fontFamily: "'Syne', sans-serif", fontSize: 13, outline: "none" }}>
+          style={{ background: A.card, border: `1px solid ${A.border}`, borderRadius: 9, padding: "8px 13px", color: A.text, fontFamily: " sans-serif", fontSize: 13, outline: "none" }}>
           <option value="">All Restaurants</option>
           {restaurants.map(r => <option key={r.id} value={r.id}>{r.emoji} {r.name}</option>)}
         </select>
@@ -502,7 +535,7 @@ function AdminMenuItems() {
             <Td><div style={{ display: "flex", alignItems: "center", gap: 10 }}><AppImage src={item.image_url} fallback={item.emoji||"🍽️"} width={34} height={34} borderRadius={8} /><span style={{ fontWeight: 700 }}>{item.name}</span></div></Td>
             <Td muted>{item.restaurant?.name}</Td>
             <Td muted>{item.category?.name || "—"}</Td>
-            <Td accent>${Number(item.price).toFixed(2)}</Td>
+            <Td accent>${Math.round(Number(item.price)).toLocaleString("fr-FR")} XAF</Td>
             <Td>{item.is_popular ? <Badge label="⭐ Yes" color={A.warning} bg="#F5A62318" /> : <span style={{ color: A.muted, fontSize: 12 }}>No</span>}</Td>
             <Td><Badge label={item.is_available ? "Available" : "Hidden"} color={item.is_available ? A.success : A.error} bg={item.is_available ? "#00C48C18" : "#FF456018"} /></Td>
             <Td>
@@ -527,12 +560,12 @@ function AdminMenuItems() {
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <Inp label="Name"  value={form.name}  onChange={v => setForm(p => ({ ...p, name: v }))}  placeholder="Smash Burger Stack" />
-              <Inp label="Price" value={form.price} onChange={v => setForm(p => ({ ...p, price: v }))} placeholder="14.99" type="number" />
+              <Inp label="Price" value={form.price} onChange={v => setForm(p => ({ ...p, price: v }))} placeholder="3500" type="number" />
               <Inp label="Emoji" value={form.emoji} onChange={v => setForm(p => ({ ...p, emoji: v }))} placeholder="🍔" />
               <div>
                 <div style={{ fontSize: 11, color: A.muted, marginBottom: 5, fontWeight: 700 }}>Restaurant</div>
                 <select value={form.restaurant_id} onChange={e => setForm(p => ({ ...p, restaurant_id: e.target.value }))}
-                  style={{ background: A.card, border: `1px solid ${A.border}`, borderRadius: 9, padding: "9px 13px", color: A.text, fontFamily: "'Syne', sans-serif", fontSize: 13, outline: "none", width: "100%" }}>
+                  style={{ background: A.card, border: `1px solid ${A.border}`, borderRadius: 9, padding: "9px 13px", color: A.text, fontFamily: " sans-serif", fontSize: 13, outline: "none", width: "100%" }}>
                   <option value="">Select restaurant</option>
                   {restaurants.map(r => <option key={r.id} value={r.id}>{r.emoji} {r.name}</option>)}
                 </select>
@@ -653,7 +686,7 @@ function AdminReviews() {
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
         {[["all","All"],["high","4–5 Stars"],["low","1–2 Stars"]].map(([key, label]) => (
           <button key={key} onClick={() => setFilter(key)}
-            style={{ background: filter === key ? `${A.accent}18` : "transparent", border: `1px solid ${filter === key ? A.accent : A.border}`, borderRadius: 100, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: filter === key ? A.accent : A.muted, cursor: "pointer", fontFamily: "'Syne', sans-serif" }}>
+            style={{ background: filter === key ? `${A.accent}18` : "transparent", border: `1px solid ${filter === key ? A.accent : A.border}`, borderRadius: 100, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: filter === key ? A.accent : A.muted, cursor: "pointer", fontFamily: " sans-serif" }}>
             {label}
           </button>
         ))}
@@ -692,7 +725,7 @@ function AdminAnalytics() {
       <SectionTitle title="Analytics" sub="Platform performance — last 30 days" />
       <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
         <StatCard label="Total Orders (30d)"  value={data?.totalOrders  ?? "—"} changeType="none" />
-        <StatCard label="Total Revenue (30d)" value={data ? `$${data.totalRevenue}` : "—"} changeType="none" />
+        <StatCard label="Total Revenue (30d)" value={data ? `${Math.round(Number(data.totalRevenue)).toLocaleString("fr-FR")} XAF` : "—"} changeType="none" />
       </div>
       {data?.topRestaurants?.length > 0 && (
         <div style={{ background: A.surface, border: `1px solid ${A.border}`, borderRadius: 14, padding: 20 }}>
@@ -720,7 +753,7 @@ function AdminAnalytics() {
 function AdminSettings() {
   const { user } = useAuth();
   const { show, Toast } = useToast();
-  const [config, setConfig] = useState({ name: "Bigbyt", city: "Lagos", tax: "8", fee: "2.99" });
+  const [config, setConfig] = useState({ name: "Bigbyt", city: "Buea", tax: "8", fee: "1500" });
 
   return (
     <div>
@@ -783,7 +816,7 @@ export default function Admin({ go }) {
 
   if (loading) {
     return (
-      <div style={{ background: A.bg, minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Syne', sans-serif", color: A.muted }}>
+      <div style={{ background: A.bg, minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: " sans-serif", color: A.muted }}>
         Checking admin access...
       </div>
     );
@@ -791,11 +824,11 @@ export default function Admin({ go }) {
 
   if (!isAdmin) {
     return (
-      <div style={{ background: A.bg, minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "'Syne', sans-serif" }}>
+      <div style={{ background: A.bg, minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: " sans-serif" }}>
         <div style={{ fontSize: 52, marginBottom: 16 }}>🔒</div>
         <div style={{ fontSize: 20, fontWeight: 800, color: A.text, marginBottom: 8 }}>Access Denied</div>
         <div style={{ fontSize: 14, color: A.muted, marginBottom: 24 }}>You don't have admin privileges.</div>
-        <button onClick={() => go("home")} style={{ background: A.accent, color: "#fff", border: "none", borderRadius: 10, padding: "12px 24px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne', sans-serif" }}>← Back to App</button>
+        <button onClick={() => go("home")} style={{ background: A.accent, color: "#fff", border: "none", borderRadius: 10, padding: "12px 24px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: " sans-serif" }}>← Back to App</button>
       </div>
     );
   }
@@ -815,7 +848,7 @@ export default function Admin({ go }) {
   };
 
   return (
-    <div style={{ fontFamily: "'Syne', sans-serif", background: A.bg, display: "flex", minHeight: "100vh", color: A.text }}>
+    <div style={{ fontFamily: " sans-serif", background: A.bg, display: "flex", minHeight: "100vh", color: A.text }}>
 
       {/* Sidebar */}
       <div style={{ width: 220, background: A.sidebar, borderRight: `1px solid ${A.border}`, flexShrink: 0, position: "sticky", top: 0, height: "100vh", overflowY: "auto", display: "flex", flexDirection: "column" }}>
@@ -845,7 +878,7 @@ export default function Admin({ go }) {
         </div>
 
         <div style={{ padding: "12px 20px", borderTop: `1px solid ${A.border}` }}>
-          <button onClick={() => go("home")} style={{ width: "100%", background: "none", border: `1px solid ${A.border}`, borderRadius: 9, padding: "9px 0", color: A.muted, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne', sans-serif" }}>
+          <button onClick={() => go("home")} style={{ width: "100%", background: "none", border: `1px solid ${A.border}`, borderRadius: 9, padding: "9px 0", color: A.muted, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: " sans-serif" }}>
             ← Back to App
           </button>
         </div>

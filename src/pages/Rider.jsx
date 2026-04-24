@@ -8,6 +8,7 @@ import {
   riderUpdateStatus,
   setRiderOnline,
 } from "../services/riderService";
+import { playOrderSound,playSuccessSound } from "../utils/sound";
 
 const R = {
   bg:      "#080808",
@@ -75,8 +76,11 @@ export default function Rider() {
 
   async function loadOrder(riderId) {
     const { orders: queue } = await getRiderActiveOrders(riderId);
+    const hadOrder = orders.length > 0;
+    const newQueue = queue || [];
     setOrders(queue || []);
     setOrder(queue?.[0] || null); // first in queue = current
+    if (!hadOrder && newQueue.length > 0) playOrderSound();
   }
 
   function showToast(msg, type = "success") {
@@ -99,6 +103,7 @@ export default function Rider() {
 
     if (nextStatus === "delivered") {
       // Remove delivered order and advance to next in queue
+       playSuccessSound();
       const remaining = orders.filter(o => o.id !== orderId);
       setOrders(remaining);
       setOrder(remaining[0] || null);
@@ -143,6 +148,7 @@ export default function Rider() {
   const s = order ? (STATUS_CONFIG[order.status] || STATUS_CONFIG.confirmed) : null;
 
   return (
+    
     <div style={{ background: R.bg, minHeight: "100vh", fontFamily: "'Syne',sans-serif", color: R.text, maxWidth: 480, margin: "0 auto", padding: "0 0 40px" }}>
 
       {/* Toast */}
