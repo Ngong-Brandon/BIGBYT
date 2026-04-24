@@ -59,9 +59,9 @@ function BackHeader({ title, onBack }) {
   );
 }
 
-const inp = (extra={}) => ({ width:"100%", background:C.card, border:`1.5px solid ${C.border}`, borderRadius:12, padding:"13px 16px", color:C.text, fontFamily:"'Syne',sans-serif", fontSize:15, outline:"none", ...extra });
+const inp = (extra={}) => ({ width:"100%", background:C.card, border:`1.5px solid ${C.border}`, borderRadius:12, padding:"13px 16px", color:C.text, fontFamily:"sans-serif", fontSize:15, outline:"none", ...extra });
 const lbl = { display:"block", fontSize:11, color:C.muted, fontWeight:700, marginBottom:6, letterSpacing:1, fontFamily:"'DM Mono',monospace" };
-const btnPrimary = (extra={}) => ({ background:C.accent, color:"#fff", border:"none", padding:"14px", borderRadius:12, fontSize:15, fontWeight:800, cursor:"pointer", fontFamily:"'Syne',sans-serif", width:"100%", ...extra });
+const btnPrimary = (extra={}) => ({ background:C.accent, color:"#fff", border:"none", padding:"14px", borderRadius:12, fontSize:15, fontWeight:800, cursor:"pointer", fontFamily:"sans-serif", width:"100%", ...extra });
 
 // ── 1. EDIT PROFILE ───────────────────────────────────────────────────────────
 function EditProfile({ onBack, showToast }) {
@@ -223,12 +223,12 @@ function SavedAddresses({ onBack, showToast }) {
             Set as default address
           </label>
           <div style={{ display:"flex", gap:8 }}>
-            <button onClick={()=>setAdding(false)} style={{ flex:1, background:C.card, color:C.muted, border:`1px solid ${C.border}`, padding:12, borderRadius:10, cursor:"pointer", fontFamily:"'Syne',sans-serif", fontWeight:700 }}>Cancel</button>
-            <button onClick={handleAdd} disabled={saving} style={{ flex:1, background:C.accent, color:"#fff", border:"none", padding:12, borderRadius:10, cursor:"pointer", fontFamily:"'Syne',sans-serif", fontWeight:800, opacity:saving?0.7:1 }}>{saving?"Saving...":"Save"}</button>
+            <button onClick={()=>setAdding(false)} style={{ flex:1, background:C.card, color:C.muted, border:`1px solid ${C.border}`, padding:12, borderRadius:10, cursor:"pointer", fontFamily:"sans-serif", fontWeight:700 }}>Cancel</button>
+            <button onClick={handleAdd} disabled={saving} style={{ flex:1, background:C.accent, color:"#fff", border:"none", padding:12, borderRadius:10, cursor:"pointer", fontFamily:"sans-serif", fontWeight:800, opacity:saving?0.7:1 }}>{saving?"Saving...":"Save"}</button>
           </div>
         </div>
       ) : (
-        <button onClick={()=>setAdding(true)} style={{ width:"100%", background:C.surface, color:C.accent, border:`1.5px dashed ${C.accent}55`, padding:14, borderRadius:14, cursor:"pointer", fontFamily:"'Syne',sans-serif", fontWeight:800, fontSize:14 }}>+ Add New Address</button>
+        <button onClick={()=>setAdding(true)} style={{ width:"100%", background:C.surface, color:C.accent, border:`1.5px dashed ${C.accent}55`, padding:14, borderRadius:14, cursor:"pointer", fontFamily:"sans-serif", fontWeight:800, fontSize:14 }}>+ Add New Address</button>
       )}
     </div>
   );
@@ -278,7 +278,7 @@ function ChangePassword({ onBack, showToast }) {
           <input value={oldPass} onChange={e=>setOldPass(e.target.value)} type="password" placeholder="Current password" disabled={verified} style={inp({ flex:1, opacity:verified?0.5:1 })} />
           {!verified && (
             <button onClick={verifyOldPassword} disabled={verifying}
-              style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:10, padding:"0 16px", color:C.text, cursor:"pointer", fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, whiteSpace:"nowrap", opacity:verifying?0.7:1 }}>
+              style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:10, padding:"0 16px", color:C.text, cursor:"pointer", fontFamily:"sans-serif", fontWeight:700, fontSize:13, whiteSpace:"nowrap", opacity:verifying?0.7:1 }}>
               {verifying?"Checking...":"Verify"}
             </button>
           )}
@@ -471,7 +471,7 @@ export default function Settings({ go }) {
   const initials = name.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase();
 
   const wrap = children => (
-    <div style={{ fontFamily:"'Syne',sans-serif", color:C.text, maxWidth:600, margin:"0 auto", padding:"0 16px 100px" }}>
+    <div style={{ fontFamily:"sans-serif", color:C.text, maxWidth:600, margin:"0 auto", padding:"0 16px 100px" }}>
       {toast && (
         <div style={{ position:"fixed", top:20, right:20, background:toast.type==="error"?C.error:C.success, color:"#fff", padding:"10px 18px", borderRadius:10, fontWeight:700, fontSize:13, zIndex:9999 }}>{toast.msg}</div>
       )}
@@ -534,7 +534,7 @@ export default function Settings({ go }) {
       </Section>
 
       <Section title="Preferences">
-        <Row icon="📍" label="Location"            sub="Lekki Phase 1, Lagos"          onClick={()=>showToast("Location settings coming soon","info")} />
+        <Row icon="📍" label="Location"            sub="MOLYKO, BUEA"          onClick={()=>showToast("Location settings coming soon","info")} />
         <Row icon="🌍" label="Language"            sub="English"                       onClick={()=>showToast("Language settings coming soon","info")} />
         <Row icon="💰" label="Currency"            sub="FRANCS (FCFA)"                       onClick={()=>showToast("Currency settings coming soon","info")} />
         <Row icon="🥗" label="Dietary Preferences" sub="Halal, no known allergies"     onClick={()=>setSub("dietary")} last />

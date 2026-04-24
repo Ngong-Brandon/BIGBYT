@@ -34,7 +34,7 @@ export default function Navbar({ screen, go }) {
           <>
             {screen === "restaurant" && (
               <button onClick={() => go("restaurants")}
-                style={{ background:"transparent", border:`1.5px solid ${C.border}`, color:C.muted, padding:"8px 16px", borderRadius:9, cursor:"pointer", fontFamily:"'Syne',sans-serif", fontSize:12, fontWeight:600 }}>
+                style={{ background:"transparent", border:`1.5px solid ${C.border}`, color:C.muted, padding:"8px 16px", borderRadius:9, cursor:"pointer", fontFamily:"sans-serif", fontSize:12, fontWeight:600 }}>
                 ← Restaurants
               </button>
             )}
@@ -53,7 +53,7 @@ export default function Navbar({ screen, go }) {
 
             {/* Cart */}
             <button onClick={() => go("cart")}
-              style={{ background:C.surface, border:`1.5px solid ${C.border}`, color:C.text, padding:"8px 14px", borderRadius:9, cursor:"pointer", fontFamily:"'Syne',sans-serif", fontSize:13, fontWeight:700, display:"flex", alignItems:"center", gap:6 }}>
+              style={{ background:C.surface, border:`1.5px solid ${C.border}`, color:C.text, padding:"8px 14px", borderRadius:9, cursor:"pointer", fontFamily:"sans-serif", fontSize:13, fontWeight:700, display:"flex", alignItems:"center", gap:6 }}>
               🛒
               {cartCount > 0 && (
                 <span style={{ background:C.accent, color:"#fff", borderRadius:"50%", width:19, height:19, display:"flex", alignItems:"center", justifyContent:"center", fontSize:10, fontWeight:800 }}>
@@ -72,11 +72,11 @@ export default function Navbar({ screen, go }) {
         ) : (
           <>
             <button onClick={() => go("login")}
-              style={{ background:"transparent", border:`1.5px solid ${C.border}`, color:C.muted, padding:"10px 20px", borderRadius:10, cursor:"pointer", fontFamily:"'Syne',sans-serif", fontSize:13, fontWeight:600 }}>
+              style={{ background:"transparent", border:`1.5px solid ${C.border}`, color:C.muted, padding:"10px 20px", borderRadius:10, cursor:"pointer", fontFamily:"sans-serif", fontSize:13, fontWeight:600 }}>
               Log In
             </button>
             <button onClick={() => go("register")}
-              style={{ background:C.accent, color:"#fff", border:"none", padding:"10px 18px", borderRadius:9, cursor:"pointer", fontFamily:"'Syne',sans-serif", fontSize:13, fontWeight:800 }}>
+              style={{ background:C.accent, color:"#fff", border:"none", padding:"10px 18px", borderRadius:9, cursor:"pointer", fontFamily:"sans-serif", fontSize:13, fontWeight:800 }}>
               Sign Up
             </button>
           </>

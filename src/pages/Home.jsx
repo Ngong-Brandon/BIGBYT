@@ -158,7 +158,7 @@ export default function Home({ go, setActiveRestaurant, activeOrder, showToast }
   ];
 
   return (
-    <div style={{ fontFamily: "'Syne', sans-serif", color: C.text, background: C.bg, paddingBottom: 100 }}>
+    <div style={{ fontFamily: "sans-serif", color: C.text, background: C.bg, paddingBottom: 100 }}>
       <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}`}</style>
 
       {/* ── Greeting + bell ─────────────────────────────────────────────── */}
@@ -309,7 +309,7 @@ export default function Home({ go, setActiveRestaurant, activeOrder, showToast }
                     </div>
                   </div>
                   <button onClick={e => { e.stopPropagation(); goToRestaurantById(order.restaurant_id); }}
-                    style={{ background: C.accent, color: "#fff", border: "none", borderRadius: 9, padding: "8px 14px", fontSize: 12, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne',sans-serif", flexShrink: 0 }}>
+                    style={{ background: C.accent, color: "#fff", border: "none", borderRadius: 9, padding: "8px 14px", fontSize: 12, fontWeight: 800, cursor: "pointer", fontFamily: "ans-serif", flexShrink: 0 }}>
                     Reorder
                   </button>
                 </div>
@@ -352,7 +352,7 @@ export default function Home({ go, setActiveRestaurant, activeOrder, showToast }
           <div style={{ fontSize: 18, fontWeight: 800, color: C.text, marginBottom: 8 }}>Let's get started!</div>
           <div style={{ fontSize: 14, marginBottom: 24 }}>Browse restaurants and place your first order</div>
           <button onClick={() => go("restaurants")}
-            style={{ background: C.accent, color: "#fff", border: "none", padding: "14px 28px", borderRadius: 12, fontSize: 15, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+            style={{ background: C.accent, color: "#fff", border: "none", padding: "14px 28px", borderRadius: 12, fontSize: 15, fontWeight: 800, cursor: "pointer", fontFamily: "ans-serif" }}>
             Browse Restaurants 🔥
           </button>
         </div>

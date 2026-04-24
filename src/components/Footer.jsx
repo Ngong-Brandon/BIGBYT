@@ -35,7 +35,7 @@ export default function Footer({ screen, go, user }) {
           background: none;
           border: none;
           cursor: pointer;
-          font-family: 'Syne', sans-serif;
+          font-family: sans-serif;
           transition: all 0.15s;
         }
         .bb-nav-btn:hover .bb-nav-label { color: ${C.text} !important; }

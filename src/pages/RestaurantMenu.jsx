@@ -71,7 +71,7 @@ export default function RestaurantMenu({ restaurant, go }) {
         <div style={{ fontSize: 48, marginBottom: 12 }}>😕</div>
         <div style={{ fontSize: 16, fontWeight: 700, color: C.text, marginBottom: 8 }}>{error}</div>
         <button onClick={() => go("restaurants")}
-          style={{ background: C.accent, color: "#fff", border: "none", padding: "12px 24px", borderRadius: 10, cursor: "pointer", fontFamily: "'Syne',sans-serif", fontWeight: 700, marginTop: 12 }}>
+          style={{ background: C.accent, color: "#fff", border: "none", padding: "12px 24px", borderRadius: 10, cursor: "pointer", fontFamily: "sans-serif", fontWeight: 700, marginTop: 12 }}>
           ← Back to Restaurants
         </button>
       </div>
@@ -143,7 +143,7 @@ export default function RestaurantMenu({ restaurant, go }) {
             value={dishSearch}
             onChange={e => setDishSearch(e.target.value)}
             placeholder={`Search dishes in ${restaurant.name}...`}
-            style={{ width: "100%", background: C.surface, border: `1.5px solid ${C.border}`, borderRadius: 12, padding: "12px 40px 12px 42px", color: C.text, fontFamily: "'Syne', sans-serif", fontSize: 14, outline: "none", boxSizing: "border-box" }}
+            style={{ width: "100%", background: C.surface, border: `1.5px solid ${C.border}`, borderRadius: 12, padding: "12px 40px 12px 42px", color: C.text, fontFamily: " sans-serif", fontSize: 14, outline: "none", boxSizing: "border-box" }}
           />
           {dishSearch && (
             <span onClick={() => setDishSearch("")}
@@ -164,7 +164,7 @@ export default function RestaurantMenu({ restaurant, go }) {
                 color: menuCat === cat ? "#fff" : C.muted,
                 border: `1.5px solid ${menuCat === cat ? C.accent : C.border}`,
                 borderRadius: 100, padding: "8px 18px", fontSize: 13, fontWeight: 700,
-                cursor: "pointer", fontFamily: "'Syne', sans-serif", transition: "all 0.15s",
+                cursor: "pointer", fontFamily: " sans-serif", transition: "all 0.15s",
               }}>
                 {cat}
               </button>

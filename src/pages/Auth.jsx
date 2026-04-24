@@ -8,7 +8,7 @@ import { useAuth } from "../context/AuthContext";
 const inputStyle = {
   width: "100%", background: "#111", border: `1.5px solid #222`,
   borderRadius: 12, padding: "13px 16px", color: "#F0EBE1",
-  fontFamily: "'Syne', sans-serif", fontSize: 15, outline: "none",
+  fontFamily: " sans-serif", fontSize: 15, outline: "none",
 };
 
 const labelStyle = {
@@ -19,7 +19,7 @@ const labelStyle = {
 const btnPrimary = {
   width: "100%", background: C.accent, color: "#fff", border: "none",
   padding: "15px", borderRadius: 12, fontSize: 16, fontWeight: 800,
-  cursor: "pointer", fontFamily: "'Syne', sans-serif", marginTop: 24,
+  cursor: "pointer", fontFamily: "sans-serif", marginTop: 24,
 };
 
 function calcAge(dob) {

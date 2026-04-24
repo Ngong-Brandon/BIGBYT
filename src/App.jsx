@@ -141,12 +141,12 @@ if (window.location.pathname === "/rider") {
         {screen === "notifications" && <Notifications go={go} />}
         {screen === "orders" && <Orders go={go} />}
         {screen === "admin" && <Admin go={go} />}
-        {screen === "checkout" && (
+        {/* {screen === "checkout" && (
   <Checkout go={go} showToast={showToast} setCustomerLocation={setCustomerLocation} />
 )}
 {screen === "tracking" && (
   <Tracking go={go} customerLocation={customerLocation} />
-)}
+)} */}
         {screen === "home" && (
       <Home
          go={go}
@@ -161,8 +161,8 @@ if (window.location.pathname === "/rider") {
           <RestaurantMenu restaurant={activeRestaurant} go={go} />
         )}
         {screen === "cart"     && <Cart go={go} />}
-        {screen === "checkout" && <Checkout go={go} showToast={showToast} />}
-        {screen === "tracking" && <Tracking go={go} />}
+        {screen === "checkout" && <Checkout go={go} showToast={showToast} setCustomerLocation={setCustomerLocation} />}
+        {screen === "tracking" && <Tracking go={go} customerLocation={customerLocation} />}
       </div>
         <Footer screen={screen} go={go} user={user} />
     </div>
@@ -177,7 +177,6 @@ export default function App() {
   return (
     
     <AuthProvider>
-      
       <CartProvider>
         <Inner />
       </CartProvider>

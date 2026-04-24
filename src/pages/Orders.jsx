@@ -175,7 +175,7 @@ function OrderDetail({ order, onBack, go, onRated }) {
         </div>
         {order.status === "on_the_way" && (
           <button onClick={() => go("tracking")}
-            style={{ marginLeft: "auto", background: C.accent, color: "#fff", border: "none", borderRadius: 9, padding: "9px 16px", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+            style={{ marginLeft: "auto", background: C.accent, color: "#fff", border: "none", borderRadius: 9, padding: "9px 16px", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: "sans-serif" }}>
             Track Live →
           </button>
         )}
@@ -264,11 +264,11 @@ function OrderDetail({ order, onBack, go, onRated }) {
                 value={comment}
                 onChange={e => setComment(e.target.value)}
                 placeholder="Tell us about your experience (optional)..."
-                style={{ width: "100%", background: C.card, border: `1.5px solid ${C.border}`, borderRadius: 10, padding: "12px 14px", color: C.text, fontFamily: "'Syne',sans-serif", fontSize: 13, outline: "none", resize: "none", height: 80, marginBottom: 14 }}
+                style={{ width: "100%", background: C.card, border: `1.5px solid ${C.border}`, borderRadius: 10, padding: "12px 14px", color: C.text, fontFamily: "sans-serif", fontSize: 13, outline: "none", resize: "none", height: 80, marginBottom: 14 }}
               />
 
               <button onClick={submitRating} disabled={submitting || !rating}
-                style={{ width: "100%", background: rating ? C.accent : C.card, color: rating ? "#fff" : C.muted, border: "none", padding: "13px", borderRadius: 11, fontSize: 15, fontWeight: 800, cursor: rating ? "pointer" : "not-allowed", fontFamily: "'Syne',sans-serif", transition: "all 0.15s" }}>
+                style={{ width: "100%", background: rating ? C.accent : C.card, color: rating ? "#fff" : C.muted, border: "none", padding: "13px", borderRadius: 11, fontSize: 15, fontWeight: 800, cursor: rating ? "pointer" : "not-allowed", fontFamily: "sans-serif", transition: "all 0.15s" }}>
                 {submitting ? "Submitting..." : "Submit Review"}
               </button>
             </>
@@ -280,12 +280,12 @@ function OrderDetail({ order, onBack, go, onRated }) {
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {order.status === "delivered" && (
           <button onClick={() => go("restaurants")}
-            style={{ width: "100%", background: C.accent, color: "#fff", border: "none", padding: 15, borderRadius: 12, fontSize: 16, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+            style={{ width: "100%", background: C.accent, color: "#fff", border: "none", padding: 15, borderRadius: 12, fontSize: 16, fontWeight: 800, cursor: "pointer", fontFamily: "sans-serif" }}>
             🔄 Reorder from {order.restaurant?.name}
           </button>
         )}
         <button onClick={onBack}
-          style={{ width: "100%", background: C.surface, color: C.muted, border: `1px solid ${C.border}`, padding: 13, borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+          style={{ width: "100%", background: C.surface, color: C.muted, border: `1px solid ${C.border}`, padding: 13, borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "sans-serif" }}>
           Back to Orders
         </button>
       </div>
@@ -319,7 +319,7 @@ export default function Orders({ go }) {
 
   if (selected) {
     return (
-      <div style={{ fontFamily: "'Syne',sans-serif", color: C.text }}>
+      <div style={{ fontFamily: "sans-serif", color: C.text }}>
         <OrderDetail order={selected} onBack={() => setSelected(null)} go={go} onRated={handleRated} />
       </div>
     );
@@ -346,7 +346,7 @@ export default function Orders({ go }) {
   const unratedDelivered = orders.filter(o => o.status === "delivered" && !o.rating);
 
   return (
-    <div style={{ fontFamily: "'Syne',sans-serif", color: C.text, maxWidth: 600, margin: "0 auto", padding: "0 16px 100px" }}>
+    <div style={{ fontFamily: "sans-serif", color: C.text, maxWidth: 600, margin: "0 auto", padding: "0 16px 100px" }}>
       <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}`}</style>
 
       <div style={{ padding: "28px 0 16px", borderBottom: `1px solid ${C.border}`, marginBottom: 8 }}>
@@ -390,7 +390,7 @@ export default function Orders({ go }) {
       <div style={{ display: "flex", gap: 8, padding: "10px 0 18px", overflowX: "auto" }}>
         {FILTERS.map(f => (
           <button key={f.key} onClick={() => setFilter(f.key)}
-            style={{ background: filter === f.key ? `${C.accent}18` : "transparent", border: `1.5px solid ${filter === f.key ? C.accent : C.border}`, borderRadius: 100, padding: "7px 18px", fontSize: 13, fontWeight: 700, color: filter === f.key ? C.accent : C.muted, cursor: "pointer", fontFamily: "'Syne',sans-serif", whiteSpace: "nowrap", transition: "all 0.15s" }}>
+            style={{ background: filter === f.key ? `${C.accent}18` : "transparent", border: `1.5px solid ${filter === f.key ? C.accent : C.border}`, borderRadius: 100, padding: "7px 18px", fontSize: 13, fontWeight: 700, color: filter === f.key ? C.accent : C.muted, cursor: "pointer", fontFamily: "sans-serif", whiteSpace: "nowrap", transition: "all 0.15s" }}>
             {f.label}
             {f.key === "active" && activeOrders.length > 0 && (
               <span style={{ marginLeft: 6, background: C.accent, color: "#fff", borderRadius: "50%", width: 16, height: 16, display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 800 }}>
@@ -415,7 +415,7 @@ export default function Orders({ go }) {
             Your order history will appear here once you place your first order.
           </div>
           <button onClick={() => go("restaurants")}
-            style={{ background: C.accent, color: "#fff", border: "none", padding: "14px 32px", borderRadius: 12, fontSize: 16, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+            style={{ background: C.accent, color: "#fff", border: "none", padding: "14px 32px", borderRadius: 12, fontSize: 16, fontWeight: 800, cursor: "pointer", fontFamily: "sans-serif" }}>
             Browse Restaurants 🔥
           </button>
         </div>

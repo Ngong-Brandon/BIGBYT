@@ -96,7 +96,7 @@ export default function AdminCampaigns() {
 
   const inp = (extra = {}) => ({
     background: A.card, border: `1px solid ${A.border}`, borderRadius: 9,
-    padding: "9px 13px", color: A.text, fontFamily: "'Syne',sans-serif",
+    padding: "9px 13px", color: A.text, fontFamily: "sans-serif",
     fontSize: 13, outline: "none", width: "100%", ...extra,
   });
 
@@ -116,7 +116,7 @@ export default function AdminCampaigns() {
   const ICON_OPTIONS = ["🎁", "🔥", "🌟", "⚡", "🎉", "💥", "🍕", "🍔", "🍜", "🥗", "🎊", "💰"];
 
   return (
-    <div style={{ fontFamily: "'Syne',sans-serif", color: A.text }}>
+    <div style={{ fontFamily: "sans-serif", color: A.text }}>
 
       {/* Toast */}
       {toast && (
@@ -134,7 +134,7 @@ export default function AdminCampaigns() {
       {/* Create button */}
       <div style={{ display:"flex", justifyContent:"flex-end", marginBottom:16 }}>
         <button onClick={() => setShowForm(!showForm)}
-          style={{ background:A.accent, color:"#fff", border:"none", borderRadius:10, padding:"9px 18px", fontSize:13, fontWeight:800, cursor:"pointer", fontFamily:"'Syne',sans-serif" }}>
+          style={{ background:A.accent, color:"#fff", border:"none", borderRadius:10, padding:"9px 18px", fontSize:13, fontWeight:800, cursor:"pointer", fontFamily:"sans-serif" }}>
           {showForm ? "× Cancel" : "+ New Campaign"}
         </button>
       </div>
@@ -255,7 +255,7 @@ export default function AdminCampaigns() {
 
             {/* Save */}
             <button onClick={handleCreate} disabled={saving}
-              style={{ background:A.accent, color:"#fff", border:"none", borderRadius:10, padding:"12px", fontSize:14, fontWeight:800, cursor:saving?"not-allowed":"pointer", fontFamily:"'Syne',sans-serif", opacity:saving?0.7:1 }}>
+              style={{ background:A.accent, color:"#fff", border:"none", borderRadius:10, padding:"12px", fontSize:14, fontWeight:800, cursor:saving?"not-allowed":"pointer", fontFamily:"sans-serif", opacity:saving?0.7:1 }}>
               {saving ? "Creating..." : "Create Campaign"}
             </button>
           </div>
@@ -299,7 +299,7 @@ export default function AdminCampaigns() {
                 {/* Actions */}
                 {c.status === "draft" && (
                   <button onClick={()=>handleSend(c)} disabled={sending===c.id}
-                    style={{ background:A.accent, color:"#fff", border:"none", borderRadius:9, padding:"9px 20px", fontSize:13, fontWeight:800, cursor:sending===c.id?"not-allowed":"pointer", fontFamily:"'Syne',sans-serif", opacity:sending===c.id?0.7:1 }}>
+                    style={{ background:A.accent, color:"#fff", border:"none", borderRadius:9, padding:"9px 20px", fontSize:13, fontWeight:800, cursor:sending===c.id?"not-allowed":"pointer", fontFamily:"sans-serif", opacity:sending===c.id?0.7:1 }}>
                     {sending===c.id ? "Sending..." : "🚀 Send Now"}
                   </button>
                 )}

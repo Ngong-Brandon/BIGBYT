@@ -107,7 +107,7 @@ const userNeighborhood = neighborhood || import.meta.env.VITE_DEFAULT_NEIGHBORHO
         <h2 style={{ color: C.text, fontWeight: 800, marginBottom: 8 }}>Something went wrong</h2>
         <p style={{ color: C.muted, marginBottom: 24 }}>{error}</p>
         <button onClick={() => window.location.reload()}
-          style={{ background: C.accent, color: "#fff", border: "none", padding: "12px 28px", borderRadius: 10, cursor: "pointer", fontFamily: "'Syne',sans-serif", fontWeight: 700 }}>
+          style={{ background: C.accent, color: "#fff", border: "none", padding: "12px 28px", borderRadius: 10, cursor: "pointer", fontFamily: "sans-serif", fontWeight: 700 }}>
           Try Again
         </button>
       </div>
@@ -127,7 +127,7 @@ const userNeighborhood = neighborhood || import.meta.env.VITE_DEFAULT_NEIGHBORHO
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search restaurants, cuisines, neighborhoods…"
-          style={{ width: "100%", background: C.surface, border: `1.5px solid ${C.border}`, borderRadius: 12, padding: "13px 16px 13px 44px", color: C.text, fontFamily: "'Syne', sans-serif", fontSize: 15, outline: "none" }}
+          style={{ width: "100%", background: C.surface, border: `1.5px solid ${C.border}`, borderRadius: 12, padding: "13px 16px 13px 44px", color: C.text, fontFamily: " sans-serif", fontSize: 15, outline: "none" }}
         />
         {search && (
           <span onClick={() => setSearch("")}

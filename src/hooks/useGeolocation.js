@@ -57,8 +57,8 @@ export function useGeolocation() {
         setError(err.message);
         setLoading(false);
         // Fallback to default city from env
-        setCity(import.meta.env.VITE_DEFAULT_CITY || "Lagos");
-        setNeighborhood(import.meta.env.VITE_DEFAULT_NEIGHBORHOOD || "Lekki Phase 1");
+        setCity(import.meta.env.VITE_DEFAULT_CITY || "Buea");
+        setNeighborhood(import.meta.env.VITE_DEFAULT_NEIGHBORHOOD || "Molyko");
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );

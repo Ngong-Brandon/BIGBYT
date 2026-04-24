@@ -60,7 +60,7 @@ borderRadius: 8, padding: "3px 10px", fontSize: 11, fontWeight: 700 }}>{restaura
             color: menuCat === cat ? "#fff" : C.muted, 
             border: `1.5px solid ${menuCat === cat ? C.accent : C.border}`, 
             borderRadius: 100, padding: "8px 18px", fontSize: 13, fontWeight: 700, 
-            cursor: "pointer", fontFamily: "'Syne', sans-serif", transition: "all 0.15s", 
+            cursor: "pointer", fontFamily: "sans-serif", transition: "all 0.15s", 
           }}> 
             {cat} 
           </button> 
@@ -154,7 +154,7 @@ C.text }}>Your Cart</h1>
 empty</div> 
           <button onClick={() => go("restaurants")} style={{ background: C.accent, color: "#fff", 
 border: "none", padding: "12px 28px", borderRadius: 10, cursor: "pointer", fontFamily: 
-"'Syne',sans-serif", fontWeight: 700, marginTop: 16, fontSize: 14 }}>Browse 
+"sans-serif", fontWeight: 700, marginTop: 16, fontSize: 14 }}>Browse 
 Restaurants</button> 
         </div> 
       ) : ( 
@@ -203,7 +203,7 @@ justifyContent: "space-between", fontWeight: 800, fontSize: 18 }}>
  
           <button onClick={() => go("checkout")} style={{ width: "100%", background: C.accent, 
 color: "#fff", border: "none", padding: "15px", borderRadius: 12, fontSize: 16, fontWeight: 800, 
-cursor: "pointer", fontFamily: "'Syne', sans-serif" }}> 
+cursor: "pointer", fontFamily: "sans-serif" }}> 
             Proceed to Checkout → 
           </button> 
         </> 
@@ -295,7 +295,7 @@ export function Checkout({ go, showToast, setCustomerLocation }) {
   const inp = (extra = {}) => ({
     width: "100%", background: C.card, border: `1.5px solid ${C.border}`,
     borderRadius: 10, padding: "13px 16px", color: C.text,
-    fontFamily: "'Syne', sans-serif", fontSize: 15, outline: "none", ...extra,
+    fontFamily: "sans-serif", fontSize: 15, outline: "none", ...extra,
   });
 
   const lbl = {
@@ -311,7 +311,7 @@ export function Checkout({ go, showToast, setCustomerLocation }) {
   };
 
   return (
-    <div style={{ maxWidth: 560, margin: "0 auto", padding: "36px 20px 100px", fontFamily: "'Syne', sans-serif", color: C.text }}>
+    <div style={{ maxWidth: 560, margin: "0 auto", padding: "36px 20px 100px", fontFamily: "sans-serif", color: C.text }}>
       <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}`}</style>
       <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.8px", marginBottom: 28 }}>Checkout</h1>
 
@@ -347,7 +347,7 @@ export function Checkout({ go, showToast, setCustomerLocation }) {
                   );
                 })}
                 <button onClick={handleUseNew}
-                  style={{ background: "none", border: `1.5px dashed ${C.border}`, borderRadius: 12, padding: "11px 16px", color: C.muted, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne', sans-serif", textAlign: "left" }}
+                  style={{ background: "none", border: `1.5px dashed ${C.border}`, borderRadius: 12, padding: "11px 16px", color: C.muted, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "sans-serif", textAlign: "left" }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = C.accent; e.currentTarget.style.color = C.accent; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.muted; }}>
                   + Use a different address
@@ -380,7 +380,7 @@ export function Checkout({ go, showToast, setCustomerLocation }) {
                     const def = savedAddresses.find(a => a.is_default) || savedAddresses[0];
                     if (def) { setSelectedSaved(def.id); setAddress(`${def.address}, ${def.city}`); }
                   }}
-                    style={{ background: "none", border: "none", color: C.accent, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne', sans-serif", marginTop: 10, padding: 0 }}>
+                    style={{ background: "none", border: "none", color: C.accent, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "sans-serif", marginTop: 10, padding: 0 }}>
                     ← Use a saved address
                   </button>
                 )}
@@ -475,7 +475,7 @@ export function Checkout({ go, showToast, setCustomerLocation }) {
       </div>
 
       <button onClick={placeOrder} disabled={placing}
-        style={{ width: "100%", background: C.accent, color: "#fff", border: "none", padding: 16, borderRadius: 12, fontSize: 16, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne', sans-serif", opacity: placing ? 0.7 : 1 }}>
+        style={{ width: "100%", background: C.accent, color: "#fff", border: "none", padding: 16, borderRadius: 12, fontSize: 16, fontWeight: 800, cursor: "pointer", fontFamily: "sans-serif", opacity: placing ? 0.7 : 1 }}>
         {placing ? "Placing Order..." : "🔥 Place Order"}
       </button>
     </div>
@@ -562,7 +562,7 @@ export function Tracking({ go, orderId, customerLocation }) {
   const isDelivered  = orderStatus === "delivered";
 
   return (
-    <div style={{ maxWidth: 580, margin: "0 auto", padding: "32px 20px 100px", fontFamily: "'Syne', sans-serif", color: C.text }}>
+    <div style={{ maxWidth: 580, margin: "0 auto", padding: "32px 20px 100px", fontFamily: "sans-serif", color: C.text }}>
 
       {/* Header */}
       <div style={{ textAlign: "center", marginBottom: 24 }}>
@@ -633,7 +633,7 @@ export function Tracking({ go, orderId, customerLocation }) {
         </div>
       )}
 
-      <button onClick={() => go("restaurants")} style={{ width: "100%", background: C.accent, color: "#fff", border: "none", padding: 15, borderRadius: 12, fontSize: 16, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne', sans-serif" }}>
+      <button onClick={() => go("restaurants")} style={{ width: "100%", background: C.accent, color: "#fff", border: "none", padding: 15, borderRadius: 12, fontSize: 16, fontWeight: 800, cursor: "pointer", fontFamily: "sans-serif" }}>
         {isDelivered ? "Order Again 🔥" : "Back to Restaurants"}
       </button>
     </div>

@@ -190,8 +190,8 @@ VITE_APP_URL=http://localhost:5173
 VITE_GOOGLE_MAPS_KEY=your-google-maps-api-key
 
 # Defaults (for neighborhood-based sorting)
-VITE_DEFAULT_CITY=Lagos
-VITE_DEFAULT_NEIGHBORHOOD=Lekki Phase 1
+VITE_DEFAULT_CITY=Buea
+VITE_DEFAULT_NEIGHBORHOOD=Molyko
 ```
 
 **Never commit `.env` to Git.** It is already in `.gitignore`.

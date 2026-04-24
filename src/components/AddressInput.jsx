@@ -46,7 +46,7 @@ export default function AddressInput({ value, onChange, onSelect, placeholder = 
     borderRadius: 12,
     padding: "13px 16px",
     color: C.text,
-    fontFamily: "'Syne', sans-serif",
+    fontFamily: " sans-serif",
     fontSize: 15,
     outline: "none",
   };

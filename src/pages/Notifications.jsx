@@ -99,7 +99,7 @@ export default function Notifications({ go }) {
     : notifications;
 
   return (
-    <div style={{ fontFamily:"'Syne',sans-serif", color:C.text, maxWidth:600, margin:"0 auto", padding:"0 0 100px" }}>
+    <div style={{ fontFamily:"sans-serif", color:C.text, maxWidth:600, margin:"0 auto", padding:"0 0 100px" }}>
 
       {/* Header */}
       {/* Header */}
@@ -117,13 +117,13 @@ export default function Notifications({ go }) {
   <div style={{ display: "flex", gap: 8 }}>
     {unreadCount > 0 && (
       <button onClick={handleMarkAllRead} disabled={marking}
-        style={{ background: "none", border: `1px solid ${C.border}`, borderRadius: 9, padding: "8px 14px", color: C.muted, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne',sans-serif", opacity: marking ? 0.6 : 1 }}>
+        style={{ background: "none", border: `1px solid ${C.border}`, borderRadius: 9, padding: "8px 14px", color: C.muted, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "sans-serif", opacity: marking ? 0.6 : 1 }}>
         {marking ? "Marking..." : "Mark all read"}
       </button>
     )}
     {notifications.length > 0 && (
       <button onClick={handleClearAll}
-        style={{ background: "none", border: `1px solid ${C.error}44`, borderRadius: 9, padding: "8px 14px", color: C.error, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+        style={{ background: "none", border: `1px solid ${C.error}44`, borderRadius: 9, padding: "8px 14px", color: C.error, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "sans-serif" }}>
         Clear all
       </button>
     )}
@@ -133,7 +133,7 @@ export default function Notifications({ go }) {
       <div style={{ display:"flex", gap:8, padding:"14px 20px", borderBottom:`1px solid ${C.border}` }}>
         {[["all","All"],["unread",`Unread${unreadCount>0?` (${unreadCount})`:""}`]].map(([key,label]) => (
           <button key={key} onClick={()=>setFilter(key)}
-            style={{ background:filter===key?`${C.accent}18`:"transparent", border:`1.5px solid ${filter===key?C.accent:C.border}`, borderRadius:100, padding:"7px 18px", fontSize:13, fontWeight:700, color:filter===key?C.accent:C.muted, cursor:"pointer", fontFamily:"'Syne',sans-serif", transition:"all 0.15s" }}>
+            style={{ background:filter===key?`${C.accent}18`:"transparent", border:`1.5px solid ${filter===key?C.accent:C.border}`, borderRadius:100, padding:"7px 18px", fontSize:13, fontWeight:700, color:filter===key?C.accent:C.muted, cursor:"pointer", fontFamily:"sans-serif", transition:"all 0.15s" }}>
             {label}
           </button>
         ))}

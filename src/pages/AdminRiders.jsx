@@ -17,7 +17,7 @@ function Badge({ label, color, bg }) {
 }
 
 function inp(extra = {}) {
-  return { background: A.card, border: `1px solid ${A.border}`, borderRadius: 9, padding: "9px 13px", color: A.text, fontFamily: "'Syne',sans-serif", fontSize: 13, outline: "none", width: "100%", ...extra };
+  return { background: A.card, border: `1px solid ${A.border}`, borderRadius: 9, padding: "9px 13px", color: A.text, fontFamily: "sans-serif", fontSize: 13, outline: "none", width: "100%", ...extra };
 }
 
 function Lbl({ children }) {
@@ -114,7 +114,7 @@ export default function AdminRiders() {
   const unassigned   = orders.filter(o => !o.rider);
 
   return (
-    <div style={{ fontFamily: "'Syne',sans-serif", color: A.text }}>
+    <div style={{ fontFamily: "sans-serif", color: A.text }}>
 
       {toast && (
         <div style={{ position: "fixed", bottom: 24, right: 24, background: toast.type === "error" ? A.error : A.success, color: "#fff", padding: "12px 20px", borderRadius: 10, fontWeight: 700, fontSize: 13, zIndex: 2000 }}>
@@ -145,11 +145,11 @@ export default function AdminRiders() {
 
             <div style={{ display: "flex", gap: 10 }}>
               <button onClick={handleAssign} disabled={assigning}
-                style={{ flex: 1, background: A.accent, color: "#fff", border: "none", borderRadius: 10, padding: "11px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne',sans-serif", opacity: assigning ? 0.7 : 1 }}>
+                style={{ flex: 1, background: A.accent, color: "#fff", border: "none", borderRadius: 10, padding: "11px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "sans-serif", opacity: assigning ? 0.7 : 1 }}>
                 {assigning ? "Assigning..." : "Assign Rider"}
               </button>
               <button onClick={() => setAssignModal(null)}
-                style={{ background: "none", border: `1px solid ${A.border}`, borderRadius: 10, padding: "11px 16px", color: A.muted, cursor: "pointer", fontFamily: "'Syne',sans-serif", fontSize: 13 }}>
+                style={{ background: "none", border: `1px solid ${A.border}`, borderRadius: 10, padding: "11px 16px", color: A.muted, cursor: "pointer", fontFamily: "sans-serif", fontSize: 13 }}>
                 Cancel
               </button>
             </div>
@@ -169,7 +169,7 @@ export default function AdminRiders() {
       <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
         {[["riders","🛵 Riders"], ["dispatch","📦 Dispatch"]].map(([key, label]) => (
           <button key={key} onClick={() => setTab(key)}
-            style={{ background: tab === key ? `${A.accent}18` : "transparent", border: `1px solid ${tab === key ? A.accent : A.border}`, borderRadius: 100, padding: "7px 18px", fontSize: 13, fontWeight: 700, color: tab === key ? A.accent : A.muted, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+            style={{ background: tab === key ? `${A.accent}18` : "transparent", border: `1px solid ${tab === key ? A.accent : A.border}`, borderRadius: 100, padding: "7px 18px", fontSize: 13, fontWeight: 700, color: tab === key ? A.accent : A.muted, cursor: "pointer", fontFamily: "sans-serif" }}>
             {label}
           </button>
         ))}
@@ -180,7 +180,7 @@ export default function AdminRiders() {
         <>
           <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
             <button onClick={openCreate}
-              style={{ background: A.accent, color: "#fff", border: "none", borderRadius: 10, padding: "9px 18px", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+              style={{ background: A.accent, color: "#fff", border: "none", borderRadius: 10, padding: "9px 18px", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: "sans-serif" }}>
               + Add Rider
             </button>
           </div>
@@ -197,11 +197,11 @@ export default function AdminRiders() {
               </div>
               <div style={{ display: "flex", gap: 10 }}>
                 <button onClick={handleSave} disabled={saving}
-                  style={{ background: A.accent, color: "#fff", border: "none", borderRadius: 10, padding: "10px 20px", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne',sans-serif", opacity: saving ? 0.7 : 1 }}>
+                  style={{ background: A.accent, color: "#fff", border: "none", borderRadius: 10, padding: "10px 20px", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: "sans-serif", opacity: saving ? 0.7 : 1 }}>
                   {saving ? "Saving..." : editTarget ? "Save Changes" : "Create Rider"}
                 </button>
                 <button onClick={() => { setShowForm(false); setEditTarget(null); }}
-                  style={{ background: "none", border: `1px solid ${A.border}`, borderRadius: 10, padding: "10px 16px", color: A.muted, cursor: "pointer", fontFamily: "'Syne',sans-serif", fontSize: 13 }}>
+                  style={{ background: "none", border: `1px solid ${A.border}`, borderRadius: 10, padding: "10px 16px", color: A.muted, cursor: "pointer", fontFamily: "sans-serif", fontSize: 13 }}>
                   Cancel
                 </button>
               </div>
@@ -245,7 +245,7 @@ export default function AdminRiders() {
                           {riderLink}
                         </div>
                         <button onClick={() => copyLink(r)}
-                          style={{ background: copiedId === r.id ? `${A.success}18` : A.surface, border: `1px solid ${copiedId === r.id ? A.success : A.border}`, borderRadius: 7, padding: "5px 12px", fontSize: 11, fontWeight: 700, cursor: "pointer", color: copiedId === r.id ? A.success : A.muted, fontFamily: "'Syne',sans-serif", whiteSpace: "nowrap", transition: "all 0.15s" }}>
+                          style={{ background: copiedId === r.id ? `${A.success}18` : A.surface, border: `1px solid ${copiedId === r.id ? A.success : A.border}`, borderRadius: 7, padding: "5px 12px", fontSize: 11, fontWeight: 700, cursor: "pointer", color: copiedId === r.id ? A.success : A.muted, fontFamily: "sans-serif", whiteSpace: "nowrap", transition: "all 0.15s" }}>
                           {copiedId === r.id ? "✓ Copied!" : "Copy Link"}
                         </button>
                       </div>
@@ -254,11 +254,11 @@ export default function AdminRiders() {
                     {/* Actions */}
                     <div style={{ display: "flex", gap: 8 }}>
                       <button onClick={() => openEdit(r)}
-                        style={{ background: "none", border: `1px solid ${A.border}`, borderRadius: 8, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: A.muted, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+                        style={{ background: "none", border: `1px solid ${A.border}`, borderRadius: 8, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: A.muted, cursor: "pointer", fontFamily: "sans-serif" }}>
                         Edit
                       </button>
                       <button onClick={() => updateRider(r.id, { is_active: !r.is_active }).then(load)}
-                        style={{ background: "none", border: `1px solid ${r.is_active ? A.error + "44" : A.success + "44"}`, borderRadius: 8, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: r.is_active ? A.error : A.success, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+                        style={{ background: "none", border: `1px solid ${r.is_active ? A.error + "44" : A.success + "44"}`, borderRadius: 8, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: r.is_active ? A.error : A.success, cursor: "pointer", fontFamily: "sans-serif" }}>
                         {r.is_active ? "Deactivate" : "Activate"}
                       </button>
                     </div>
@@ -275,7 +275,7 @@ export default function AdminRiders() {
         <>
           <div style={{ marginBottom: 16 }}>
             <button onClick={load}
-              style={{ background: "none", border: `1px solid ${A.border}`, borderRadius: 9, padding: "7px 16px", color: A.muted, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+              style={{ background: "none", border: `1px solid ${A.border}`, borderRadius: 9, padding: "7px 16px", color: A.muted, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "sans-serif" }}>
               🔄 Refresh
             </button>
           </div>
@@ -318,7 +318,7 @@ export default function AdminRiders() {
                       </div>
                     ) : (
                       <button onClick={() => { setAssignModal(order); setSelectedRider(""); }}
-                        style={{ background: `${A.accent}18`, border: `1px solid ${A.accent}44`, borderRadius: 10, padding: "10px 16px", width: "100%", fontSize: 13, fontWeight: 700, color: A.accent, cursor: "pointer", fontFamily: "'Syne',sans-serif", textAlign: "center" }}>
+                        style={{ background: `${A.accent}18`, border: `1px solid ${A.accent}44`, borderRadius: 10, padding: "10px 16px", width: "100%", fontSize: 13, fontWeight: 700, color: A.accent, cursor: "pointer", fontFamily: "sans-serif", textAlign: "center" }}>
                         + Assign Rider
                       </button>
                     )}

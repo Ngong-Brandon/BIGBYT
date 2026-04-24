@@ -39,7 +39,7 @@ const EMPTY_FORM = {
 function inp(extra = {}) {
   return {
     background: A.card, border: `1px solid ${A.border}`, borderRadius: 9,
-    padding: "9px 13px", color: A.text, fontFamily: "'Syne',sans-serif",
+    padding: "9px 13px", color: A.text, fontFamily: "sans-serif",
     fontSize: 13, outline: "none", width: "100%", ...extra,
   };
 }
@@ -199,7 +199,7 @@ export default function AdminAdverts() {
   });
 
   return (
-    <div style={{ fontFamily: "'Syne',sans-serif", color: A.text }}>
+    <div style={{ fontFamily: "sans-serif", color: A.text }}>
 
       {toast && (
         <div style={{ position: "fixed", bottom: 24, right: 24, background: toast.type === "error" ? A.error : A.success, color: "#fff", padding: "12px 20px", borderRadius: 10, fontWeight: 700, fontSize: 13, zIndex: 2000 }}>
@@ -218,13 +218,13 @@ export default function AdminAdverts() {
         <div style={{ display: "flex", gap: 8 }}>
           {[["all","All"],["active","Active"],["expired","Expired"]].map(([key, label]) => (
             <button key={key} onClick={() => setFilter(key)}
-              style={{ background: filter === key ? `${A.accent}18` : "transparent", border: `1px solid ${filter === key ? A.accent : A.border}`, borderRadius: 100, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: filter === key ? A.accent : A.muted, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+              style={{ background: filter === key ? `${A.accent}18` : "transparent", border: `1px solid ${filter === key ? A.accent : A.border}`, borderRadius: 100, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: filter === key ? A.accent : A.muted, cursor: "pointer", fontFamily: "sans-serif" }}>
               {label}
             </button>
           ))}
         </div>
         <button onClick={openCreate}
-          style={{ background: A.accent, color: "#fff", border: "none", borderRadius: 10, padding: "9px 18px", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+          style={{ background: A.accent, color: "#fff", border: "none", borderRadius: 10, padding: "9px 18px", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: "sans-serif" }}>
           + New Advert
         </button>
       </div>
@@ -339,11 +339,11 @@ export default function AdminAdverts() {
 
           <div style={{ display: "flex", gap: 10, marginTop: 20, paddingTop: 20, borderTop: `1px solid ${A.border}` }}>
             <button onClick={handleSave} disabled={saving}
-              style={{ background: A.accent, color: "#fff", border: "none", borderRadius: 10, padding: "11px 24px", fontSize: 14, fontWeight: 800, cursor: saving ? "not-allowed" : "pointer", fontFamily: "'Syne',sans-serif", opacity: saving ? 0.7 : 1 }}>
+              style={{ background: A.accent, color: "#fff", border: "none", borderRadius: 10, padding: "11px 24px", fontSize: 14, fontWeight: 800, cursor: saving ? "not-allowed" : "pointer", fontFamily: "sans-serif", opacity: saving ? 0.7 : 1 }}>
               {saving ? "Saving..." : editTarget ? "Update Advert" : "Create Advert"}
             </button>
             <button onClick={() => { setShowForm(false); setEditTarget(null); }}
-              style={{ background: "none", border: `1px solid ${A.border}`, borderRadius: 10, padding: "11px 20px", color: A.muted, fontSize: 13, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+              style={{ background: "none", border: `1px solid ${A.border}`, borderRadius: 10, padding: "11px 20px", color: A.muted, fontSize: 13, cursor: "pointer", fontFamily: "sans-serif" }}>
               Cancel
             </button>
           </div>
@@ -400,17 +400,17 @@ export default function AdminAdverts() {
                 {/* Actions */}
                 <div style={{ display: "flex", gap: 8, marginTop: 14, paddingTop: 14, borderTop: `1px solid ${A.border}`, flexWrap: "wrap" }}>
                   <button onClick={() => openEdit(advert)}
-                    style={{ background: "none", border: `1px solid ${A.border}`, borderRadius: 8, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: A.muted, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+                    style={{ background: "none", border: `1px solid ${A.border}`, borderRadius: 8, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: A.muted, cursor: "pointer", fontFamily: "sans-serif" }}>
                     Edit
                   </button>
                   {active && (
                     <button onClick={() => handleDeactivate(advert)}
-                      style={{ background: "none", border: `1px solid ${A.warning}44`, borderRadius: 8, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: A.warning, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+                      style={{ background: "none", border: `1px solid ${A.warning}44`, borderRadius: 8, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: A.warning, cursor: "pointer", fontFamily: "sans-serif" }}>
                       Deactivate
                     </button>
                   )}
                   <button onClick={() => handleDelete(advert)}
-                    style={{ background: "none", border: `1px solid ${A.error}44`, borderRadius: 8, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: A.error, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+                    style={{ background: "none", border: `1px solid ${A.error}44`, borderRadius: 8, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: A.error, cursor: "pointer", fontFamily: "sans-serif" }}>
                     Delete
                   </button>
                 </div>

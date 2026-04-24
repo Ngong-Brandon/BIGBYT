@@ -46,11 +46,11 @@ export default function Landing({ go }) {
 
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
           <button onClick={() => go("register")}
-            style={{ background: C.accent, color: "#fff", border: "none", padding: "16px 36px", borderRadius: 12, fontSize: 16, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne', sans-serif" }}>
+            style={{ background: C.accent, color: "#fff", border: "none", padding: "16px 36px", borderRadius: 12, fontSize: 16, fontWeight: 800, cursor: "pointer", fontFamily: " sans-serif" }}>
             Get Started →
           </button>
           <button onClick={() => go("login")}
-            style={{ background: "transparent", border: `1.5px solid ${C.border}`, color: C.muted, padding: "16px 28px", borderRadius: 12, fontSize: 15, cursor: "pointer", fontFamily: "'Syne', sans-serif", fontWeight: 600 }}>
+            style={{ background: "transparent", border: `1.5px solid ${C.border}`, color: C.muted, padding: "16px 28px", borderRadius: 12, fontSize: 15, cursor: "pointer", fontFamily: " sans-serif", fontWeight: 600 }}>
             I have an account
           </button>
         </div>

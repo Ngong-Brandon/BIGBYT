@@ -123,7 +123,7 @@ export default function Rider() {
   // ── Loading ───────────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div style={{ background: R.bg, minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Syne',sans-serif" }}>
+      <div style={{ background: R.bg, minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "sans-serif" }}>
         <div style={{ textAlign: "center", color: R.muted }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>🛵</div>
           <div style={{ fontSize: 16, fontWeight: 700, color: R.text }}>Loading...</div>
@@ -135,7 +135,7 @@ export default function Rider() {
   // ── Invalid token ─────────────────────────────────────────────────────────
   if (error) {
     return (
-      <div style={{ background: R.bg, minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, fontFamily: "'Syne',sans-serif" }}>
+      <div style={{ background: R.bg, minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, fontFamily: "sans-serif" }}>
         <div style={{ textAlign: "center", maxWidth: 320 }}>
           <div style={{ fontSize: 52, marginBottom: 16 }}>🔒</div>
           <div style={{ fontSize: 18, fontWeight: 800, color: R.text, marginBottom: 8 }}>Access Denied</div>
@@ -149,7 +149,7 @@ export default function Rider() {
 
   return (
     
-    <div style={{ background: R.bg, minHeight: "100vh", fontFamily: "'Syne',sans-serif", color: R.text, maxWidth: 480, margin: "0 auto", padding: "0 0 40px" }}>
+    <div style={{ background: R.bg, minHeight: "100vh", fontFamily: "sans-serif", color: R.text, maxWidth: 480, margin: "0 auto", padding: "0 0 40px" }}>
 
       {/* Toast */}
       {toast && (
@@ -195,7 +195,7 @@ export default function Rider() {
                 : "Tap the button above to go online and receive deliveries."}
             </div>
             <button onClick={() => loadOrder(rider.id)}
-              style={{ background: R.surface, color: R.muted, border: `1px solid ${R.border}`, borderRadius: 10, padding: "10px 20px", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+              style={{ background: R.surface, color: R.muted, border: `1px solid ${R.border}`, borderRadius: 10, padding: "10px 20px", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "sans-serif" }}>
               🔄 Refresh
             </button>
           </div>
@@ -266,13 +266,13 @@ export default function Rider() {
                       <div style={{ width: 24, height: 24, background: R.card, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, color: R.accent }}>{item.qty}x</div>
                       <span>{item.name}</span>
                     </div>
-                    <span style={{ color: R.muted, fontFamily: "'DM Mono',monospace" }}>${(item.price * item.qty).toFixed(2)}</span>
+                    <span style={{ color: R.muted, fontFamily: "'DM Mono',monospace" }}>${(item.price * item.qty).toFixed(2)}XAF</span>
                   </div>
                 ))}
               </div>
               <div style={{ borderTop: `1px solid ${R.border}`, marginTop: 12, paddingTop: 12, display: "flex", justifyContent: "space-between", fontWeight: 800, fontSize: 16 }}>
                 <span>Total</span>
-                <span style={{ color: R.accent, fontFamily: "'DM Mono',monospace" }}>${Number(order.total).toFixed(2)}</span>
+                <span style={{ color: R.accent, fontFamily: "'DM Mono',monospace" }}>{Number(order.total).toFixed(2)}XAF</span>
               </div>
             </div>
 
@@ -285,7 +285,7 @@ export default function Rider() {
                   width: "100%", padding: "18px", borderRadius: 14, border: "none",
                   background: s.next === "delivered" ? R.success : R.accent,
                   color: "#fff", fontSize: 17, fontWeight: 800, cursor: updating ? "not-allowed" : "pointer",
-                  fontFamily: "'Syne',sans-serif", opacity: updating ? 0.7 : 1,
+                  fontFamily: "sans-serif", opacity: updating ? 0.7 : 1,
                   letterSpacing: "-0.3px", transition: "opacity 0.15s",
                 }}>
                 {updating ? "Updating..." : s.nextLabel}
@@ -303,7 +303,7 @@ export default function Rider() {
 
             {/* Refresh */}
             <button onClick={() => loadOrder(rider.id)}
-              style={{ width: "100%", marginTop: 12, background: "none", border: `1px solid ${R.border}`, borderRadius: 10, padding: "11px", color: R.muted, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne',sans-serif" }}>
+              style={{ width: "100%", marginTop: 12, background: "none", border: `1px solid ${R.border}`, borderRadius: 10, padding: "11px", color: R.muted, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "sans-serif" }}>
               🔄 Refresh
             </button>
 
@@ -324,7 +324,7 @@ export default function Rider() {
                         <div style={{ fontSize: 11, color: R.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{o.delivery_address}</div>
                       </div>
                       <div style={{ fontSize: 12, color: R.accent, fontWeight: 700, fontFamily: "'DM Mono',monospace" }}>
-                        ${Number(o.total).toFixed(2)}
+                        {Number(o.total).toFixed(2)}XAF
                       </div>
                     </div>
                   ))}
