@@ -135,6 +135,7 @@ export function AuthProvider({ children }) {
     await logoutUser();
     setUser(null);
     setProfile(null);
+    localStorage.removeItem("profile");
     setPendingEmail(null);
   }
 

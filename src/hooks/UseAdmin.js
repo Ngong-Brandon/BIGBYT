@@ -16,7 +16,7 @@ export function useAdmin() {
       // !! Add your admin emails here !!
       // Option 1 — hardcoded admin emails (simple, fine for small team)
       const ADMIN_EMAILS = [
-        "ngongfonchang115@gmail.com",    // !! REPLACE with your actual admin email !!
+        "ngongfonchang115@gmail.com",    // admin email !!
         "admin@bigbyt.com",      // !! Add more admin emails as needed !!
       ];
   

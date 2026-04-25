@@ -155,7 +155,7 @@ function SavedAddresses({ onBack, showToast }) {
   const [saving,    setSaving]    = useState(false);
   const [newLabel,  setNewLabel]  = useState("");
   const [newAddr,   setNewAddr]   = useState("");
-  const [newCity,   setNewCity]   = useState("Lagos");
+  const [newCity,   setNewCity]   = useState("Buea");
   const [isDef,     setIsDef]     = useState(false);
 
   useEffect(() => {
@@ -170,7 +170,7 @@ function SavedAddresses({ onBack, showToast }) {
     setSaving(false);
     if (error) return showToast(error.message||"Failed to add","error");
     setAddresses(prev=>[...(isDef?prev.map(a=>({...a,is_default:false})):prev), address]);
-    setNewLabel(""); setNewAddr(""); setNewCity("Lagos"); setIsDef(false); setAdding(false);
+    setNewLabel(""); setNewAddr(""); setNewCity("Buea"); setIsDef(false); setAdding(false);
     showToast("Address added!","success");
   }
 
