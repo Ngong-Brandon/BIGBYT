@@ -73,7 +73,8 @@ export default function Home({ go, setActiveRestaurant, activeOrder, showToast }
   
   const userNeighborhood = profile?.neighborhood || import.meta.env.VITE_DEFAULT_NEIGHBORHOOD || "Molyko";
   const userCity         = profile?.city         || import.meta.env.VITE_DEFAULT_CITY         || "Buea";
-  console.log(profile?.city);
+  console.log(import.meta.env.VITE_DEFAULT_CITY);
+  
   
 
   const EMOJI_MAP = {
